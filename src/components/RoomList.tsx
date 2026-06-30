@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, Wifi, Coffee, Wind, Waves, Bed, ChevronLeft, ChevronRight, 
-  ArrowLeft, ArrowRight, Star, Heart, Tv, HelpCircle, Eye, SlidersHorizontal,
-  FolderOpen
+  ArrowLeft, ArrowRight, Star, Heart, Tv, HelpCircle, Eye, SlidersHorizontal
 } from 'lucide-react';
 import { Room } from '../types';
 
@@ -349,19 +348,6 @@ export default function RoomList({
                         {room.type === 'comfort' ? 'Comfort • Ar' : 'Standard • Vent.'}
                       </div>
 
-                      {/* Floating Google Drive Folder Link */}
-                      {room.driveFolder && (
-                        <a 
-                          href={`https://drive.google.com/drive/folders/${room.driveFolder}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="absolute top-4 right-4 bg-white/95 hover:bg-white text-sky-600 p-2 rounded-full shadow hover:shadow-md transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
-                          title="Ver fotos no Google Drive 📂"
-                        >
-                          <FolderOpen className="w-4 h-4" />
-                        </a>
-                      )}
 
                       {/* Image slider dot indicators */}
                       {room.images.length > 1 && (

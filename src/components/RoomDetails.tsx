@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowLeft, Wifi, Coffee, Wind, Waves, Bed, Calendar, 
   ArrowRight, ChevronLeft, ChevronRight, CreditCard, Users,
-  CheckCircle2, Tv, ShieldCheck, Sparkles, MapPin, BadgePercent,
-  FolderOpen
+  CheckCircle2, Tv, ShieldCheck, Sparkles, MapPin, BadgePercent
 } from 'lucide-react';
 import { Room } from '../types';
 
@@ -230,28 +229,6 @@ export default function RoomDetails({ room, setActiveTab, onBack, onBook }: Room
                 </div>
               </div>
 
-              {/* Google Drive Link for Photos */}
-              {room.driveFolder && (
-                <div className="p-4 bg-sky-50 border border-sky-100/70 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="bg-sky-100 p-2 rounded-xl text-sky-600 shrink-0">
-                      <FolderOpen className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-xs sm:text-sm text-ocean">Pasta de Fotos no Google Drive</h4>
-                      <p className="text-[11px] text-gray-500 mt-0.5">Deseja conferir mais fotos originais e em alta resolução desta acomodação? Acesse a pasta compartilhada no Drive.</p>
-                    </div>
-                  </div>
-                  <a 
-                    href={`https://drive.google.com/drive/folders/${room.driveFolder}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition-all hover:-translate-y-0.5 inline-flex items-center gap-1.5 cursor-pointer text-center justify-center"
-                  >
-                    Abrir Google Drive 📂
-                  </a>
-                </div>
-              )}
 
             </div>
 

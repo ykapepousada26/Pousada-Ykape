@@ -132,7 +132,7 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1idwQmDhr5SfZTyjFcCorZ6AQDqFua0Wk',
+      '/src/assets/images/suite_master_vista_mar_1782829944355.jpg',
       'https://lh3.googleusercontent.com/d/1F-j0srbjt5Zqeuzz5AXsafKQs_0TSxKk',
       'https://lh3.googleusercontent.com/d/1HT0psglEWjkBtvgs0UE58s2JPwLk-HJW',
       'https://lh3.googleusercontent.com/d/11LtlOyrsffzUtPAMDDvObXHWpLRHziau'
@@ -317,7 +317,7 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1c0W1kncj3A3ikkXC2np7KTZRxLCxfKX3',
+      '/src/assets/images/suite_standard_familia_quarto_12_1782830051643.jpg',
       'https://lh3.googleusercontent.com/d/1eao_E_6H-VjDYH8cTUCP6Qb6kzr-BvQV',
       'https://lh3.googleusercontent.com/d/1ZneCkRZjbbSHFaJ5cCJoA7sve_tUpTTh',
       'https://lh3.googleusercontent.com/d/1-5SmNMjIr0BVjJD_WSitrgFGhNnrK_ph'

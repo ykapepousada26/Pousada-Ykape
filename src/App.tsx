@@ -6,7 +6,7 @@ import {
   MapPin as MapPinIcon, Calendar, ArrowRight, ExternalLink,
   ChevronLeft, ChevronRight, Star, Quote, Clock, Flame, 
   Utensils, Layers, Activity, Shield, Percent, CreditCard, Droplets,
-  ChevronDown, ChevronUp, HelpCircle, MessageSquare, FolderOpen
+  ChevronDown, ChevronUp, HelpCircle, MessageSquare
 } from 'lucide-react';
 
 import { Room, MenuItem, Review, GalleryItem, Reservation, BookingSearch } from './types';
@@ -593,7 +593,7 @@ export default function App() {
                 O paraíso em frente ao mar que você merece
               </h1>
               
-              <p className="text-sm sm:text-lg text-[#444444] mt-4 max-w-2xl leading-[25.25px]">
+              <p className="text-sm sm:text-lg text-white mt-4 max-w-2xl leading-[25.25px]">
                 Basta atravessar a Avenida Beira Mar para sentir a brisa do oceano. Desfrute de uma piscina paradisíaca, café da manhã farto incluso e conforto total para recarregar as energias.
               </p>
 
@@ -731,18 +731,6 @@ export default function App() {
                       <div className="absolute top-4 left-4 bg-ocean text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
                         {room.type === 'comfort' ? 'Comfort • Ar Condicionado' : 'Standard • Ventilador Teto'}
                       </div>
-                      {room.driveFolder && (
-                        <a 
-                          href={`https://drive.google.com/drive/folders/${room.driveFolder}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="absolute top-4 right-4 bg-white/95 hover:bg-white text-sky-600 p-2 rounded-full shadow hover:shadow-md transition-all hover:scale-110 flex items-center justify-center cursor-pointer"
-                          title="Ver fotos no Google Drive 📂"
-                        >
-                          <FolderOpen className="w-4.5 h-4.5" />
-                        </a>
-                      )}
                       <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur text-turquoise px-3.5 py-1.5 rounded-lg text-xs font-bold shadow uppercase tracking-wide">
                         Sob Consulta
                       </div>
