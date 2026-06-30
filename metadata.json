@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Pousada Ykape",
+  "description": "Site institucional e sistema de reservas online 50% antecipado para a Pousada Ykape, localizada em frente ao mar no Balneário Yemar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

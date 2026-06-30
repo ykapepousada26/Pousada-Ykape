@@ -1,0 +1,48 @@
+{
+  "collections": {
+    "rooms": {
+      "id": "string",
+      "name": "string",
+      "type": "string",
+      "capacity": "number",
+      "pricePerNight": "number",
+      "description": "string",
+      "hasAirConditioning": "boolean",
+      "amenities": "array",
+      "images": "array",
+      "status": "string",
+      "totalUnits": "number"
+    },
+    "menuItems": {
+      "id": "string",
+      "category": "string",
+      "name": "string",
+      "description": "string",
+      "price": "number",
+      "available": "boolean"
+    },
+    "gallery": {
+      "id": "string",
+      "album": "string",
+      "title": "string",
+      "imageUrl": "string"
+    },
+    "reservations": {
+      "id": "string",
+      "code": "string",
+      "roomId": "string",
+      "roomName": "string",
+      "checkIn": "string",
+      "checkOut": "string",
+      "guests": "number",
+      "nights": "number",
+      "totalValue": "number",
+      "depositPaid": "number",
+      "remainingBalance": "number",
+      "paymentMethod": "string",
+      "status": "string",
+      "guest": "map",
+      "createdAt": "string"
+    }
+  }
+}
