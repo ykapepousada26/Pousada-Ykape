@@ -36,31 +36,23 @@ import { getCollectionData, syncCollectionToFirestore, saveDocument, deleteDocum
 const FAQ_ITEMS = [
   {
     q: "Quais são os horários de Check-in e Check-out?",
-    a: "Nosso Check-in (entrada) inicia a partir das 12:00 h e o nosso Check-out (saída) deve ser efetuado até às 11:00 h. Caso precise de horários especiais de early check-in ou late check-out, por favor consulte nossa recepção previamente para verificar taxas e disponibilidade."
+    a: "Nosso Check-in (entrada) inicia a partir das 12:00 h e o nosso Check-out (saída) deve ser efetuado até às 11:00 h. Caso precise de horários especiais de early check-in ou late check-out, por favor consulte nossa recepção previamente."
   },
   {
-    q: "Como funciona a política para pets (animais de estimação)?",
-    a: "Aceitamos animais de estimação (pets) de pequeno porte sob consulta prévia no momento da reserva. Cobramos uma taxa de higienização simbólica e solicitamos o cumprimento das regras básicas de convivência nas áreas comuns para o bem-estar de todos os hóspedes."
+    q: "Quais são as comodidades das suítes?",
+    a: "Contamos com 20 quartos, sendo 19 suítes simples e 1 suíte dupla. Todas as suítes possuem ventiladores (não são de teto), TV e Wi-Fi. O frigobar é um item opcional disponível à parte."
   },
   {
-    q: "Como é feita a garantia de reserva e quais as formas de pagamento?",
-    a: "A sua reserva é garantida e efetivada mediante o pagamento de um sinal correspondente a 50% do valor total da estadia (via Pix ou transferência bancária). Os 50% restantes podem ser quitados no momento do check-in utilizando Pix, dinheiro, ou cartões de débito e crédito (com parcelamento sob consulta de condições)."
+    q: "A pousada possui piscina?",
+    a: "Sim! Dispomos de 02 piscinas mistas para o lazer de nossos hóspedes, além de área infantil com pula-pula e escorregador."
   },
   {
-    q: "Qual é a política de cancelamento ou reagendamento?",
-    a: "O cancelamento gratuito ou reagendamento da estadia é permitido se solicitado com até 08 dias de antecedência em relação à data original de check-in. Para cancelamentos com prazos menores que 08 dias, o sinal de 50% pago para a garantia não será reembolsável."
+    q: "Como funciona a área gourmet?",
+    a: "A área gourmet está disponível mediante agendamento antecipado e possui um custo à parte. É um espaço ideal para confraternizações familiares."
   },
   {
-    q: "A pousada oferece serviços de transporte ou transfer?",
-    a: "Não possuímos serviço de traslado próprio. Contudo, temos parceria com prestadores de serviço locais de extrema confiança e motoristas credenciados que realizam traslados sob agendamento. Se precisar de indicações ou cotações de transporte a partir de aeroportos (Guarulhos, Congonhas, Curitiba) ou rodoviárias, nossa recepção fornecerá todos os contatos necessários pelo WhatsApp."
-  },
-  {
-    q: "O café da manhã está incluso na diária? Qual o horário de atendimento?",
-    a: "Sim, absolutamente! Um farto e delicioso café da manhã com bolos caseiros, pães artesanais quentinhos, sucos naturais e frutas frescas está totalmente incluso na sua diária. O serviço é oferecido no salão de café das 08:00 h até às 10:00 h todas as manhãs."
-  },
-  {
-    q: "Como são as suítes? O que está incluso e o que é opcional?",
-    a: "Todas as nossas suítes contam com cama de casal e cama de solteiro, televisão (TV) e conexão Wi-Fi de alta performance inclusos. Oferecemos opções com frigobar (opcional sob consulta de tarifa/abastecimento) e ar condicionado (opcional e disponível em determinadas suítes ou mediante ativação). Dispomos também de apartamentos no térreo e piso superior, onde 70% das acomodações desfrutam de vista direta para o mar."
+    q: "Como é feita a garantia de reserva?",
+    a: "A sua reserva é garantida mediante o pagamento de um sinal correspondente a 50% do valor total da estadia. Os 50% restantes são pagos no momento do check-in."
   }
 ];
 
@@ -573,29 +565,30 @@ export default function App() {
           {/* ----- SECTION: HERO / HOME INÍCIO ----- */}
           <section id="inicio" className="relative pt-20 overflow-hidden">
             {/* Ambient Background Hero */}
-            <div className="absolute inset-0 z-0 bg-black/45">
-              <img 
-                src="https://ecrie.com.br/sistema/conteudos/imagem/g_38_1_1_21012025093140.jpg" 
-                alt="Pousada Ykapê - Frente para o Mar" 
-                className="w-full h-full object-cover select-none"
-                referrerPolicy="no-referrer"
-              />
-            </div>
+      <div className="absolute inset-0 z-0 bg-black/80">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
+        <img 
+          src="https://lh3.googleusercontent.com/d/1Cve8YF_DENANXcAvIUYCK_20f3IaHA6L" 
+          alt="Pousada Ykapê - Frente para o Mar" 
+          className="w-full h-full object-cover select-none"
+          referrerPolicy="no-referrer"
+        />
+      </div>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 flex flex-col items-center text-center text-white">
-              <WeatherWidget />
-              
-              <span className="bg-turquoise/90 backdrop-blur-md text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-bounce mt-8">
-                <Sparkles className="w-4 h-4 text-yellow-300" /> Pé na Areia • Balneário Yemar
-              </span>
-              
-              <h1 className="font-heading font-extrabold text-4xl sm:text-6xl tracking-tight text-ocean mt-6 max-w-3xl leading-tight">
-                O paraíso em frente ao mar que você merece
-              </h1>
-              
-              <p className="text-sm sm:text-lg text-white mt-4 max-w-2xl leading-[25.25px]">
-                Basta atravessar a Avenida Beira Mar para sentir a brisa do oceano. Desfrute de uma piscina paradisíaca, café da manhã farto incluso e conforto total para recarregar as energias.
-              </p>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 flex flex-col items-center text-center text-white">
+        <WeatherWidget />
+        
+        <span className="bg-turquoise/90 backdrop-blur-md text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-bounce mt-8">
+          <Sparkles className="w-4 h-4 text-yellow-300" /> Pé na Areia • Balneário Yemar
+        </span>
+        
+        <h1 className="font-heading font-extrabold text-4xl sm:text-6xl tracking-tight text-ocean mt-6 max-w-3xl leading-tight">
+          O paraíso em frente ao mar que você merece
+        </h1>
+        
+        <p className="text-sm sm:text-lg text-white mt-4 max-w-2xl leading-[25.25px]">
+          Basta atravessar a Avenida Beira Mar para sentir a brisa do oceano. Desfrute de 02 piscinas maravilhosas, café da manhã farto incluso e conforto total para recarregar as energias.
+        </p>
 
               {/* Home Quick Search booking engine bar */}
               <div className="w-full max-w-4xl bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-6 mt-12 text-gray-800 shadow-2xl border border-sand/40">
@@ -669,8 +662,8 @@ export default function App() {
                   </div>
                   <div className="space-y-1">
                     <span className="text-2xl">🏊‍♂️</span>
-                    <h4 className="font-heading font-bold text-xs sm:text-sm text-white">Piscina Ativa</h4>
-                    <p className="text-[10px] text-gray-500">Refresco e lazer sob o sol</p>
+                    <h4 className="font-heading font-bold text-xs sm:text-sm text-white">02 Piscinas</h4>
+                    <p className="text-[10px] text-gray-500">Piscinas mistas para seu lazer</p>
                   </div>
                   <div className="space-y-1">
                     <span className="text-2xl">☕</span>
@@ -700,7 +693,7 @@ export default function App() {
               <div className="text-center space-y-3">
                 <span className="text-xs uppercase tracking-widest text-turquoise font-extrabold">Nossas Suítes</span>
                 <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-ocean">Acomodações Preparadas para o seu Descanso</h2>
-                <p className="text-sm text-gray-500 max-w-xl mx-auto">Nossos 20 apartamentos oferecem conforto térmico, frigobar, banheiro privativo completo e Wi-Fi de fibra óptica.</p>
+                <p className="text-sm text-gray-500 max-w-xl mx-auto">Nossos 20 apartamentos oferecem conforto, Wi-Fi de fibra óptica e acomodações para até 6 pessoas.</p>
               </div>
 
               {/* Rooms layout */}
@@ -729,7 +722,7 @@ export default function App() {
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute top-4 left-4 bg-ocean text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                        {room.type === 'comfort' ? 'Comfort • Ar Condicionado' : 'Standard • Ventilador Teto'}
+                        {room.type === 'comfort' ? 'Comfort • Ar Condicionado' : 'Standard • Ventilador'}
                       </div>
                       <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur text-turquoise px-3.5 py-1.5 rounded-lg text-xs font-bold shadow uppercase tracking-wide">
                         Sob Consulta
@@ -833,12 +826,14 @@ export default function App() {
                   </p>
                   
                   <div className="space-y-3">
-                    <h4 className="font-heading font-bold text-sm text-ocean">Nossos Valores Diferenciais:</h4>
+                    <h4 className="font-heading font-bold text-sm text-ocean">Nossos Diferenciais:</h4>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-gray-600">
-                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Frente para o Mar (Apenas atravessar)</li>
-                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Piscina Adulto & Infantil</li>
+                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Frente para o Mar (Basta atravessar)</li>
+                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> 02 Piscinas Mistas</li>
                       <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Estacionamento Amplo Gratuito</li>
-                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Frigobares em todas as suítes</li>
+                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Lazer infantil (Pula-pula e Escorregador)</li>
+                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Suítes para até 06 pessoas</li>
+                      <li className="flex items-center gap-2"><span className="text-turquoise font-bold">&bull;</span> Frigobar Opcional (À parte)</li>
                     </ul>
                   </div>
 
@@ -849,11 +844,11 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="rounded-2xl overflow-hidden aspect-[4/5] bg-gray-100 shadow-sm">
                     <img 
-                      src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAFjNKL86LhEFcfH7VZ-PSisQmSU9uaYT-kbJuuBis1vn1kltrIfqdjeCcUU56bGddKEser_PxWqcDTihsvyfHF4caTiGH6M1ND0eKHXnCL0aERhXpnhfSkNbIucaD-mReevewG3=s680-w680-h510-rw" 
-                      alt="Suíte de casal" 
+                      src="https://lh3.googleusercontent.com/d/1eol-jyuHpaX3veF4sIYAhuBc5WoIS6W8" 
+                      alt="Recepção e Refeitório" 
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
@@ -861,7 +856,7 @@ export default function App() {
                   <div className="rounded-2xl overflow-hidden aspect-[4/5] bg-gray-100 shadow-sm mt-8">
                     <img 
                       src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAE-WAa1RhYCj-7v4tSi-CLcz1zl3R-YpQO8KLxSvUcvy6ohZ5lkZw37giBP6I8g-4F7wemp9PGeBeldzbM12tTwu5_KoZgpPWiYAJmsGcLg0xCB-cmPvaSr_6JP5PDdSWW61Juf5RPEaIY=s680-w680-h510-rw" 
-                      alt="Piscina sob o sol" 
+                      alt="Lazer na Pousada" 
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
@@ -997,7 +992,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 7. Área gourmet com dois quiosques */}
+                {/* 7. Área gourmet */}
                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group flex flex-col justify-between">
                   <div className="space-y-4">
                     <div className="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -1006,30 +1001,30 @@ export default function App() {
                     <div>
                       <h3 className="font-heading font-bold text-base text-ocean">Área Gourmet</h3>
                       <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                        Estrutura social premium contendo <strong className="text-ocean font-bold">dois quiosques equipados com churrasqueira</strong> individuais para você curtir com sua família.
+                        Espaço equipado para suas confraternizações. <strong className="text-ocean font-bold">Agendamento antecipado necessário (custo à parte)</strong>.
                       </p>
                     </div>
                   </div>
                   <div className="mt-4 pt-3 border-t border-gray-50 text-[10px] text-red-600 font-bold tracking-wider uppercase flex items-center gap-1">
-                    <span>🍖 Churrasqueiras completas</span>
+                    <span>🍖 Churrasqueira & Convívio</span>
                   </div>
                 </div>
 
-                {/* 8. Duas piscinas (sendo uma frente mar) & Beach Tennis */}
+                {/* 8. 02 Piscinas & Lazer Infantil */}
                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group flex flex-col justify-between">
                   <div className="space-y-4">
                     <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Waves className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-heading font-bold text-base text-ocean">Lazer & Esportes</h3>
+                      <h3 className="font-heading font-bold text-base text-ocean">Lazer Completo</h3>
                       <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                        Contamos com <strong className="text-ocean font-bold">uma piscina</strong> (de frente e com vista total para o mar) e uma novíssima <strong className="text-ocean font-bold">Quadra de Beach Tennis</strong>.
+                        Contamos com <strong className="text-ocean font-bold">02 Piscinas Mistas</strong> e área infantil com <strong className="text-ocean font-bold">pula-pula e escorregador</strong>.
                       </p>
                     </div>
                   </div>
                   <div className="mt-4 pt-3 border-t border-gray-50 text-[10px] text-teal-600 font-bold tracking-wider uppercase flex items-center gap-1">
-                    <span>🎾 Beach Tennis & Piscina</span>
+                    <span>🏊‍♂️ Diversão para toda família</span>
                   </div>
                 </div>
 
@@ -1115,7 +1110,7 @@ export default function App() {
                 {/* Column 1: Porções */}
                 <div className="bg-stone-50 p-6 sm:p-8 rounded-2xl border border-gray-200/60 space-y-6">
                   <h3 className="font-heading font-bold text-lg text-ocean flex items-center gap-2 border-b border-gray-200 pb-3">
-                    🍤 Porções Crocantes
+                    🍤 Porções, Bebidas e Sucos Naturais
                   </h3>
                   <div className="space-y-4">
                     {menuItems.filter(item => item.category === 'porcoes').map(item => (
@@ -1124,16 +1119,16 @@ export default function App() {
                           <strong className="text-gray-800 font-semibold">{item.name}</strong>
                           {item.description && <p className="text-xs text-gray-400">{item.description}</p>}
                         </div>
-                        <span className="font-bold text-turquoise whitespace-nowrap">R$ {item.price.toFixed(2)}</span>
+                        <span className="font-bold text-turquoise whitespace-nowrap uppercase tracking-widest text-[10px]">Sob Consulta</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Column 2: Bebidas & Drinks */}
+                {/* Column 2: Bebidas & Sucos */}
                 <div className="bg-stone-50 p-6 sm:p-8 rounded-2xl border border-gray-200/60 space-y-6">
                   <h3 className="font-heading font-bold text-lg text-ocean flex items-center gap-2 border-b border-gray-200 pb-3">
-                    🍹 Drinks Tropicais & Bebidas
+                    🍹 Bebidas & Sucos Naturais
                   </h3>
                   <div className="space-y-4">
                     {menuItems.filter(item => item.category === 'drinks' || item.category === 'bebidas').map(item => (
@@ -1142,7 +1137,7 @@ export default function App() {
                           <strong className="text-gray-800 font-semibold">{item.name}</strong>
                           {item.description && <p className="text-xs text-gray-400">{item.description}</p>}
                         </div>
-                        <span className="font-bold text-turquoise whitespace-nowrap">R$ {item.price.toFixed(2)}</span>
+                        <span className="font-bold text-turquoise whitespace-nowrap uppercase tracking-widest text-[10px]">Sob Consulta</span>
                       </div>
                     ))}
                   </div>

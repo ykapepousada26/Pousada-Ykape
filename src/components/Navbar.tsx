@@ -45,9 +45,9 @@ export default function Navbar({
           {/* Logo & Name */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNavClick('inicio')}>
             <img 
-              src="https://i.postimg.cc/26z0SP1x/logo-ykape-azul-removebg-preview.png" 
+              src="https://lh3.googleusercontent.com/d/1J1lYzCcLCA1XGuCSHc4mQoycn4bWglup" 
               alt="Pousada Ykapê" 
-              className="h-16 w-auto object-contain py-1" 
+              className="h-[95px] w-[111.9219px] object-contain py-1" 
               referrerPolicy="no-referrer" 
             />
           </div>

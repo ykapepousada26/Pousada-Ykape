@@ -48,6 +48,20 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Weather proxy endpoint
+  app.get('/api/weather', async (req, res) => {
+    try {
+      const response = await fetch(
+        'https://api.open-meteo.com/v1/forecast?latitude=-24.7431&longitude=-47.5519&current_weather=true'
+      );
+      const data = await response.json();
+      res.json(data);
+    } catch (err) {
+      console.error('[Weather Proxy] Error fetching weather:', err);
+      res.status(500).json({ error: 'Failed to fetch weather' });
+    }
+  });
+
   // Endpoint to fetch images for a single room
   app.get('/api/room-images', async (req, res) => {
     const folderId = req.query.folderId as string;

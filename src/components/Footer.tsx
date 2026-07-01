@@ -52,7 +52,7 @@ export default function Footer({ setActiveTab, setIsAdminMode, onOpenBooking }: 
               />
             </div>
             <p className="text-sm text-gray-200 leading-relaxed">
-              Frente para o mar no Balneário Yemar. Basta atravessar a Avenida Beira Mar para desfrutar da areia e das ondas. Oferecemos 20 apartamentos confortáveis, duas piscinas refrescantes, estacionamento seguro e café da manhã farto incluso.
+              Frente para o mar no Balneário Yemar. Basta atravessar a Avenida Beira Mar para desfrutar da areia e das ondas. Oferecemos 20 apartamentos (19 suítes simples e 1 dupla), duas piscinas mistas, área gourmet, lazer infantil e café da manhã farto incluso. Frigobar opcional à parte.
             </p>
             <div className="flex gap-2 pt-2">
               <span className="text-[11px] bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-full text-turquoise font-semibold transition-colors">
@@ -120,17 +120,30 @@ export default function Footer({ setActiveTab, setIsAdminMode, onOpenBooking }: 
               Contatos Rápidos
             </h3>
             <div className="space-y-3 text-sm text-gray-200">
-              <p className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-turquoise" />
-                <a 
-                  href="https://wa.me/5513997654321?text=Olá,%20gostaria%20de%20informações%20sobre%20as%20reservas!" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="hover:text-turquoise transition-colors"
-                >
-                  (13) 99765-4321 <span className="text-emerald-400 font-semibold text-xs ml-1">(WhatsApp)</span>
-                </a>
-              </p>
+              <div className="space-y-1">
+                <p className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-turquoise" />
+                  <a 
+                    href="https://wa.me/5513997654321?text=Olá,%20gostaria%20de%20informações%20sobre%20as%20reservas!" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="hover:text-turquoise transition-colors"
+                  >
+                    (13) 99765-4321 <span className="text-emerald-400 font-semibold text-xs ml-1">(WhatsApp 1)</span>
+                  </a>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-turquoise" />
+                  <a 
+                    href="https://wa.me/5513999999999?text=Olá,%20gostaria%20de%20informações%20sobre%20as%20reservas!" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="hover:text-turquoise transition-colors"
+                  >
+                    (13) 99999-9999 <span className="text-emerald-400 font-semibold text-xs ml-1">(WhatsApp 2)</span>
+                  </a>
+                </p>
+              </div>
               <p className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-turquoise" />
                 <span>contato@pousadaykape.com.br</span>

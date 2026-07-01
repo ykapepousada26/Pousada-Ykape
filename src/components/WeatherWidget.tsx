@@ -14,10 +14,7 @@ export const WeatherWidget: React.FC = () => {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Coordinates for Ilha Comprida, SP
-        const response = await fetch(
-          'https://api.open-meteo.com/v1/forecast?latitude=-24.7431&longitude=-47.5519&current_weather=true'
-        );
+        const response = await fetch('/api/weather');
         const data = await response.json();
         if (data.current_weather) {
           setWeather({

@@ -110,7 +110,7 @@ export default function RoomDetails({ room, setActiveTab, onBack, onBook }: Room
 
                 {/* Room Category Label */}
                 <div className="absolute top-4 left-4 bg-ocean/90 backdrop-blur text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-md">
-                  {room.type === 'comfort' ? 'Comfort • Ar Condicionado' : 'Standard • Ventilador Teto'}
+                  {room.type === 'comfort' ? 'Comfort • Ar Condicionado' : 'Standard • Ventilador'}
                 </div>
 
                 {/* Image Index Counter */}
@@ -179,7 +179,7 @@ export default function RoomDetails({ room, setActiveTab, onBack, onBook }: Room
                       </>
                     ) : (
                       <>
-                        <Waves className="w-4 h-4 text-turquoise" /> Ventilador Teto
+                        <Waves className="w-4 h-4 text-turquoise" /> Ventilador
                       </>
                     )}
                   </div>
