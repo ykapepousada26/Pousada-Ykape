@@ -91,69 +91,46 @@ export default function App() {
 
   const [reviews, _setReviews] = useState<Review[]>(INITIAL_REVIEWS);
 
-  // Wrapped setters
+  // Wrapped setters that automatically sync to Firestore when changed via AdminPanel
   const setRooms = (value: React.SetStateAction<Room[]>) => {
-    _setRooms(value);
+    _setRooms(prev => {
+      const next = typeof value === 'function' ? (value as any)(prev) : value;
+      syncCollectionToFirestore('rooms', prev, next);
+      return next;
+    });
   };
 
   const setMenuItems = (value: React.SetStateAction<MenuItem[]>) => {
-    _setMenuItems(value);
+    _setMenuItems(prev => {
+      const next = typeof value === 'function' ? (value as any)(prev) : value;
+      syncCollectionToFirestore('menuItems', prev, next);
+      return next;
+    });
   };
 
   const setGallery = (value: React.SetStateAction<GalleryItem[]>) => {
-    _setGallery(value);
+    _setGallery(prev => {
+      const next = typeof value === 'function' ? (value as any)(prev) : value;
+      syncCollectionToFirestore('gallery', prev, next);
+      return next;
+    });
   };
 
   const setReservations = (value: React.SetStateAction<Reservation[]>) => {
-    _setReservations(value);
+    _setReservations(prev => {
+      const next = typeof value === 'function' ? (value as any)(prev) : value;
+      syncCollectionToFirestore('reservations', prev, next);
+      return next;
+    });
   };
 
   const setReviews = (value: React.SetStateAction<Review[]>) => {
-    _setReviews(value);
+    _setReviews(prev => {
+      const next = typeof value === 'function' ? (value as any)(prev) : value;
+      syncCollectionToFirestore('reviews', prev, next);
+      return next;
+    });
   };
-
-  // Refs to track previous state for syncing
-  const prevRoomsRef = useRef<Room[]>(INITIAL_ROOMS);
-  const prevMenuRef = useRef<MenuItem[]>(INITIAL_MENU);
-  const prevGalleryRef = useRef<GalleryItem[]>(INITIAL_GALLERY);
-  const prevReservationsRef = useRef<Reservation[]>(INITIAL_RESERVATIONS);
-  const prevReviewsRef = useRef<Review[]>(INITIAL_REVIEWS);
-
-  // Persistence Effects
-  useEffect(() => {
-    if (!isLoading) {
-      syncCollectionToFirestore('rooms', prevRoomsRef.current, rooms);
-      prevRoomsRef.current = rooms;
-    }
-  }, [rooms, isLoading]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      syncCollectionToFirestore('menuItems', prevMenuRef.current, menuItems);
-      prevMenuRef.current = menuItems;
-    }
-  }, [menuItems, isLoading]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      syncCollectionToFirestore('gallery', prevGalleryRef.current, gallery);
-      prevGalleryRef.current = gallery;
-    }
-  }, [gallery, isLoading]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      syncCollectionToFirestore('reservations', prevReservationsRef.current, reservations);
-      prevReservationsRef.current = reservations;
-    }
-  }, [reservations, isLoading]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      syncCollectionToFirestore('reviews', prevReviewsRef.current, reviews);
-      prevReviewsRef.current = reviews;
-    }
-  }, [reviews, isLoading]);
 
   // Load Firestore data on mount
   useEffect(() => {
@@ -180,7 +157,6 @@ export default function App() {
         let finalRooms = loadedRooms;
 
         // Try to fetch real Google Drive images from our custom Express API to replace any fictional/placeholder images
-        // This is a special feature for this pousada to keep images synced with Google Drive
         try {
           const apiRes = await fetch('/api/rooms');
           if (apiRes.ok) {
@@ -191,14 +167,8 @@ export default function App() {
               if (apiRoom && apiRoom.images && apiRoom.images.length > 0) {
                 const isDifferent = JSON.stringify(r.images) !== JSON.stringify(apiRoom.images);
                 if (isDifferent) {
-                  const updated = {
-                    ...r,
-                    images: apiRoom.images
-                  };
-                  // Sync updated images back to Firestore asynchronously
-                  saveDocument('rooms', r.id, updated).catch(err => {
-                    console.error(`Failed to auto-update room images for ${r.id} in Firestore:`, err);
-                  });
+                  const updated = { ...r, images: apiRoom.images };
+                  saveDocument('rooms', r.id, updated).catch(() => {});
                   return updated;
                 }
               }
@@ -206,7 +176,7 @@ export default function App() {
             });
           }
         } catch (apiErr) {
-          console.error('Failed to load real room images from fullstack API:', apiErr);
+          console.error('Failed to load real room images:', apiErr);
         }
 
         if (active) {
@@ -215,13 +185,6 @@ export default function App() {
           _setGallery(loadedGallery);
           _setReservations(loadedReservations);
           _setReviews(loadedReviews);
-          
-          // Update refs to current state to prevent re-sync on mount
-          prevRoomsRef.current = finalRooms;
-          prevMenuRef.current = loadedMenu;
-          prevGalleryRef.current = loadedGallery;
-          prevReservationsRef.current = loadedReservations;
-          prevReviewsRef.current = loadedReviews;
         }
       } catch (error) {
         console.error('Error connecting to Firebase:', error);

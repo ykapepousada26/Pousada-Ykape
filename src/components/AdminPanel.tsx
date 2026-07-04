@@ -541,6 +541,12 @@ export default function AdminPanel({
     }
   };
 
+  const handleDeleteRoom = (id: string) => {
+    if (confirm('Deseja realmente excluir este quarto? Todas as reservas associadas a este ID de quarto podem ficar órfãs.')) {
+      setRooms(prev => prev.filter(r => r.id !== id));
+    }
+  };
+
   // ----- HANDLERS FOR MENU -----
   const handleEditMenuClick = (item: MenuItem) => {
     setEditingMenuItem(item);
@@ -1485,6 +1491,13 @@ export default function AdminPanel({
                             className="bg-turquoise/10 hover:bg-turquoise/20 text-turquoise-dark p-2 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
                           >
                             <Edit className="w-3.5 h-3.5" /> Editar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteRoom(room.id)}
+                            className="bg-rose-50 hover:bg-rose-100 text-rose-600 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                          >
+                            <Trash className="w-3.5 h-3.5" /> Excluir
                           </button>
                         </div>
                       </div>

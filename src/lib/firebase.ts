@@ -109,18 +109,25 @@ export async function syncCollectionToFirestore<T extends { id: string }>(
 ): Promise<void> {
   try {
     // Find added or updated items
-    for (const nextItem of next) {
+    const updates = next.filter(nextItem => {
       const prevItem = prev.find(p => p.id === nextItem.id);
-      if (!prevItem || JSON.stringify(prevItem) !== JSON.stringify(nextItem)) {
-        await saveDocument(collectionName, nextItem.id, nextItem);
+      return !prevItem || JSON.stringify(prevItem) !== JSON.stringify(nextItem);
+    });
+
+    if (updates.length > 0) {
+      console.log(`[Firestore Sync] Syncing ${updates.length} updates/additions to ${collectionName}`);
+      for (const item of updates) {
+        await saveDocument(collectionName, item.id, item);
       }
     }
 
     // Find deleted items
-    for (const prevItem of prev) {
-      const nextItem = next.find(n => n.id === prevItem.id);
-      if (!nextItem) {
-        await deleteDocument(collectionName, prevItem.id);
+    const deletions = prev.filter(prevItem => !next.find(n => n.id === prevItem.id));
+
+    if (deletions.length > 0) {
+      console.log(`[Firestore Sync] Syncing ${deletions.length} deletions from ${collectionName}`);
+      for (const item of deletions) {
+        await deleteDocument(collectionName, item.id);
       }
     }
   } catch (error) {
