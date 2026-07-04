@@ -1,5 +1,16 @@
 import { initializeApp } from 'firebase/app';
 import { 
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  User
+} from 'firebase/auth';
+import { 
   getFirestore, 
   collection, 
   getDocs, 
@@ -14,6 +25,10 @@ import firebaseConfig from '../../firebase-applet-config.json';
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const auth = getAuth(app);
+
+export { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail };
+export type { User };
 
 /**
  * Fetches data from a Firestore collection. If the collection is empty,

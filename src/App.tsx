@@ -28,6 +28,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import CancellationPolicy from './components/CancellationPolicy';
 import RoomDetails from './components/RoomDetails';
 import RoomList from './components/RoomList';
+import OccupancyPill from './components/OccupancyPill';
 import { WeatherWidget } from './components/WeatherWidget';
 import { AnnouncementBanner } from './components/AnnouncementBanner';
 
@@ -543,6 +544,7 @@ export default function App() {
       ) : activeTab === 'acomodacoes-lista' ? (
         <RoomList 
           rooms={rooms}
+          reservations={reservations}
           setSelectedRoomForDetails={setSelectedRoomForDetails}
           setActiveTab={setActiveTab}
           onBook={handleDirectBook}
@@ -550,6 +552,7 @@ export default function App() {
       ) : activeTab === 'detalhes-quarto' && selectedRoomForDetails ? (
         <RoomDetails 
           room={selectedRoomForDetails} 
+          reservations={reservations}
           setActiveTab={setActiveTab} 
           onBack={() => {
             setActiveTab('inicio');
@@ -725,22 +728,25 @@ export default function App() {
                         {room.type === 'comfort' ? 'Comfort • Ar Condicionado' : 'Standard • Ventilador'}
                       </div>
                       <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur text-turquoise px-3.5 py-1.5 rounded-lg text-xs font-bold shadow uppercase tracking-wide">
-                        Sob Consulta
+                        {(!room.isPriceOnRequest && room.pricePerNight > 0) ? `R$ ${room.pricePerNight}` : 'Sob Consulta'}
                       </div>
                     </div>
 
                     {/* Specifications */}
                     <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
                       <div className="space-y-3">
-                        <h3 
-                          onClick={() => {
-                            setSelectedRoomForDetails(room);
-                            setActiveTab('detalhes-quarto');
-                          }}
-                          className="font-heading font-extrabold text-xl text-ocean cursor-pointer hover:text-turquoise transition-colors"
-                        >
-                          {room.name}
-                        </h3>
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 
+                            onClick={() => {
+                              setSelectedRoomForDetails(room);
+                              setActiveTab('detalhes-quarto');
+                            }}
+                            className="font-heading font-extrabold text-xl text-ocean cursor-pointer hover:text-turquoise transition-colors"
+                          >
+                            {room.name}
+                          </h3>
+                          <OccupancyPill roomId={room.id} reservations={reservations} />
+                        </div>
                         <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">{room.description}</p>
                         
                         {/* Features grid */}
@@ -768,7 +774,9 @@ export default function App() {
                       <div className="pt-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
                         <div className="text-center sm:text-left">
                           <span className="text-[10px] text-gray-400 block uppercase font-bold tracking-wider">Atendimento Exclusivo</span>
-                          <strong className="text-turquoise-dark text-xs uppercase tracking-wide">Orçamento sob consulta</strong>
+                          <strong className="text-turquoise-dark text-xs uppercase tracking-wide">
+                            {(!room.isPriceOnRequest && room.pricePerNight > 0) ? `A partir de R$ ${room.pricePerNight}` : 'Orçamento sob consulta'}
+                          </strong>
                         </div>
                         <div className="flex w-full sm:w-auto gap-2">
                           <button
@@ -1119,7 +1127,9 @@ export default function App() {
                           <strong className="text-gray-800 font-semibold">{item.name}</strong>
                           {item.description && <p className="text-xs text-gray-400">{item.description}</p>}
                         </div>
-                        <span className="font-bold text-turquoise whitespace-nowrap uppercase tracking-widest text-[10px]">Sob Consulta</span>
+                        <span className="font-bold text-turquoise whitespace-nowrap uppercase tracking-widest text-[10px]">
+                          {item.price > 0 ? `R$ ${item.price}` : 'Sob Consulta'}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -1137,7 +1147,9 @@ export default function App() {
                           <strong className="text-gray-800 font-semibold">{item.name}</strong>
                           {item.description && <p className="text-xs text-gray-400">{item.description}</p>}
                         </div>
-                        <span className="font-bold text-turquoise whitespace-nowrap uppercase tracking-widest text-[10px]">Sob Consulta</span>
+                        <span className="font-bold text-turquoise whitespace-nowrap uppercase tracking-widest text-[10px]">
+                          {item.price > 0 ? `R$ ${item.price}` : 'Sob Consulta'}
+                        </span>
                       </div>
                     ))}
                   </div>

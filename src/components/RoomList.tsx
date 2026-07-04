@@ -4,10 +4,12 @@ import {
   Search, Wifi, Coffee, Wind, Waves, Bed, ChevronLeft, ChevronRight, 
   ArrowLeft, ArrowRight, Star, Heart, Tv, HelpCircle, Eye, SlidersHorizontal
 } from 'lucide-react';
-import { Room } from '../types';
+import { Room, Reservation } from '../types';
+import OccupancyPill from './OccupancyPill';
 
 interface RoomListProps {
   rooms: Room[];
+  reservations: Reservation[];
   setSelectedRoomForDetails: (room: Room | null) => void;
   setActiveTab: (tab: string) => void;
   onBook: (room: Room) => void;
@@ -15,6 +17,7 @@ interface RoomListProps {
 
 export default function RoomList({ 
   rooms, 
+  reservations,
   setSelectedRoomForDetails, 
   setActiveTab, 
   onBook 
@@ -377,6 +380,7 @@ export default function RoomList({
                           >
                             {room.name}
                           </h3>
+                          <OccupancyPill roomId={room.id} reservations={reservations} />
                         </div>
 
                         <p className="text-xs text-gray-500 line-clamp-3 leading-relaxed">
@@ -402,7 +406,9 @@ export default function RoomList({
                       <div className="pt-4 border-t border-stone-100 flex items-center justify-between gap-2">
                         <div>
                           <span className="text-[10px] text-gray-400 block uppercase font-bold tracking-wider">Diárias</span>
-                          <span className="text-xs font-bold text-turquoise-dark uppercase tracking-wide">Sob Consulta</span>
+                          <span className="text-xs font-bold text-turquoise-dark uppercase tracking-wide">
+                            {(!room.isPriceOnRequest && room.pricePerNight > 0) ? `R$ ${room.pricePerNight}` : 'Sob Consulta'}
+                          </span>
                         </div>
                         <div className="flex gap-1.5">
                           <button

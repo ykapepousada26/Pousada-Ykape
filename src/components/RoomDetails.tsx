@@ -5,16 +5,18 @@ import {
   ArrowRight, ChevronLeft, ChevronRight, CreditCard, Users,
   CheckCircle2, Tv, ShieldCheck, Sparkles, MapPin, BadgePercent
 } from 'lucide-react';
-import { Room } from '../types';
+import { Room, Reservation } from '../types';
+import OccupancyPill from './OccupancyPill';
 
 interface RoomDetailsProps {
   room: Room;
+  reservations: Reservation[];
   setActiveTab: (tab: string) => void;
   onBack: () => void;
   onBook: () => void;
 }
 
-export default function RoomDetails({ room, setActiveTab, onBack, onBook }: RoomDetailsProps) {
+export default function RoomDetails({ room, reservations, setActiveTab, onBack, onBook }: RoomDetailsProps) {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
 
   useEffect(() => {
@@ -151,6 +153,7 @@ export default function RoomDetails({ room, setActiveTab, onBack, onBook }: Room
                   <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-ocean tracking-tight">
                     {room.name}
                   </h1>
+                  <OccupancyPill roomId={room.id} reservations={reservations} />
                   {room.id === 'apt-master-luxo' && (
                     <span className="bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5" /> Destaque Premium
@@ -242,7 +245,15 @@ export default function RoomDetails({ room, setActiveTab, onBack, onBook }: Room
               <div className="text-center pb-6 border-b border-stone-100">
                 <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block mb-1">Status da Tarifa</span>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-2xl font-extrabold text-turquoise font-heading uppercase tracking-wide">Sob Consulta</span>
+                  {(!room.isPriceOnRequest && room.pricePerNight > 0) ? (
+                    <>
+                      <span className="text-sm font-bold text-gray-400">R$</span>
+                      <span className="text-4xl font-extrabold text-turquoise font-heading">{room.pricePerNight}</span>
+                      <span className="text-xs font-bold text-gray-400">/noite</span>
+                    </>
+                  ) : (
+                    <span className="text-2xl font-extrabold text-turquoise font-heading uppercase tracking-wide">Sob Consulta</span>
+                  )}
                 </div>
                 <div className="mt-2 text-xs text-turquoise-dark bg-turquoise/5 py-1 px-3 rounded-full inline-block font-semibold">
                   🌴 Orçamento Sob Medida via WhatsApp

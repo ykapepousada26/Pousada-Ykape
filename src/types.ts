@@ -10,6 +10,7 @@ export interface Room {
   images: string[];
   status: 'available' | 'occupied' | 'maintenance';
   totalUnits: number;
+  isPriceOnRequest?: boolean;
   blockedDates?: string[];
   driveFolder?: string;
 }

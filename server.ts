@@ -50,15 +50,44 @@ async function startServer() {
 
   // Weather proxy endpoint
   app.get('/api/weather', async (req, res) => {
+    const fetchWithRetry = async (retries = 2): Promise<Response> => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000); // 12s timeout per attempt
+      
+      try {
+        const response = await fetch(
+          'https://api.open-meteo.com/v1/forecast?latitude=-24.7431&longitude=-47.5519&current_weather=true',
+          { signal: controller.signal }
+        );
+        clearTimeout(timeout);
+        return response;
+      } catch (err: any) {
+        clearTimeout(timeout);
+        if (retries > 0 && (err.name === 'AbortError' || err.message.includes('timeout'))) {
+          console.log(`[Weather Proxy] Retrying... (${retries} left)`);
+          return fetchWithRetry(retries - 1);
+        }
+        throw err;
+      }
+    };
+
     try {
-      const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=-24.7431&longitude=-47.5519&current_weather=true'
-      );
+      const response = await fetchWithRetry();
+      
+      if (!response.ok) {
+        throw new Error(`Weather API returned ${response.status}`);
+      }
+      
       const data = await response.json();
       res.json(data);
-    } catch (err) {
-      console.error('[Weather Proxy] Error fetching weather:', err);
-      res.status(500).json({ error: 'Failed to fetch weather' });
+    } catch (err: any) {
+      const isTimeout = err.name === 'AbortError' || err.message?.includes('timeout');
+      console.error('[Weather Proxy] Error:', isTimeout ? 'Timeout after retries' : err.message);
+      
+      res.status(503).json({ 
+        error: 'Serviço de clima indisponível',
+        details: isTimeout ? 'Timeout' : 'Connection failed'
+      });
     }
   });
 

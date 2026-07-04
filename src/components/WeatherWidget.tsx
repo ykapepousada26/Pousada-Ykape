@@ -15,15 +15,25 @@ export const WeatherWidget: React.FC = () => {
     const fetchWeather = async () => {
       try {
         const response = await fetch('/api/weather');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new TypeError("Oops, we haven't got JSON!");
+        }
+
         const data = await response.json();
-        if (data.current_weather) {
+        if (data && data.current_weather) {
           setWeather({
             temperature: Math.round(data.current_weather.temperature),
             weathercode: data.current_weather.weathercode,
           });
         }
       } catch (error) {
-        console.error('Error fetching weather:', error);
+        // Silently fail as the widget just won't show
+        console.warn('Weather fetch suppressed:', error);
       } finally {
         setLoading(false);
       }

@@ -6,7 +6,7 @@ export const INITIAL_ROOMS: Room[] = [
     name: 'Quarto 01 - Suíte Master Premium (A mais bela)',
     type: 'comfort',
     capacity: 4,
-    pricePerNight: 0,
+    pricePerNight: 450,
     description: 'A mais bela acomodação da pousada. Espaçosa e com decoração diferenciada para momentos especiais.',
     hasAirConditioning: true,
     amenities: [
@@ -33,7 +33,7 @@ export const INITIAL_ROOMS: Room[] = [
     name: 'Quarto 02 - Suíte Standard Vista Mar e Piscina',
     type: 'standard',
     capacity: 3,
-    pricePerNight: 0,
+    pricePerNight: 320,
     description: 'Linda vista para o mar e para a piscina. Acomodação arejada com ventilação natural.',
     hasAirConditioning: false,
     amenities: [
@@ -59,7 +59,7 @@ export const INITIAL_ROOMS: Room[] = [
     name: 'Quarto 03 - Suíte Standard Frente Mar',
     type: 'standard',
     capacity: 3,
-    pricePerNight: 0,
+    pricePerNight: 350,
     description: 'Localização privilegiada de frente para o mar, aproveitando a brisa marinha constante.',
     hasAirConditioning: false,
     amenities: [
@@ -776,53 +776,4 @@ export const INITIAL_COUPONS: Coupon[] = [
   { code: 'VERAO2026', discountPercent: 15, active: true }
 ];
 
-export const INITIAL_RESERVATIONS: Reservation[] = [
-  {
-    id: 'res-9812',
-    code: 'YKP-9812',
-    roomId: 'apt-master-luxo',
-    roomName: 'Suíte Master Premium Frente Mar',
-    checkIn: '2026-07-10',
-    checkOut: '2026-07-13',
-    guests: 2,
-    nights: 3,
-    totalValue: 1440,
-    depositPaid: 720,
-    remainingBalance: 720,
-    paymentMethod: 'pix',
-    status: 'confirmed',
-    guest: {
-      fullName: 'Beatriz Almeida e Silva',
-      cpf: '334.556.789-01',
-      phone: '(11) 98877-6655',
-      email: 'beatriz.almeida@email.com',
-      city: 'São Paulo',
-      state: 'SP'
-    },
-    createdAt: '2026-06-20 14:32'
-  },
-  {
-    id: 'res-9813',
-    code: 'YKP-9813',
-    roomId: 'apt-master-luxo',
-    roomName: 'Suíte Master Premium Frente Mar',
-    checkIn: '2026-07-04',
-    checkOut: '2026-07-06',
-    guests: 4,
-    nights: 2,
-    totalValue: 960,
-    depositPaid: 480,
-    remainingBalance: 480,
-    paymentMethod: 'credit',
-    status: 'pending_payment',
-    guest: {
-      fullName: 'Geraldo Magela Costa',
-      cpf: '123.456.789-99',
-      phone: '(41) 99123-4455',
-      email: 'geraldo.mg@email.com',
-      city: 'Curitiba',
-      state: 'PR'
-    },
-    createdAt: '2026-06-22 09:15'
-  }
-];
+export const INITIAL_RESERVATIONS: Reservation[] = [];

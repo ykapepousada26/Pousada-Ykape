@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BarChart, Users, Calendar, BookOpen, Image as ImageIcon, 
   Plus, Edit, Trash, Filter, RefreshCw, Layers, ShieldCheck, 
-  Settings, DollarSign, Bed, CheckCircle, Clock, AlertTriangle, ChevronLeft, ChevronRight
+  Settings, DollarSign, Bed, CheckCircle, Clock, AlertTriangle, ChevronLeft, ChevronRight,
+  LogOut, Lock, Mail, Key, User as UserIcon, Loader2, ArrowRight, Shield, Droplets, Utensils
 } from 'lucide-react';
 import { Room, MenuItem, Review, GalleryItem, Reservation, GuestData } from '../types';
+import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, User, sendPasswordResetEmail } from '../lib/firebase';
 
 interface AdminPanelProps {
   rooms: Room[];
@@ -31,6 +33,16 @@ export default function AdminPanel({
   setReservations,
   onClose
 }: AdminPanelProps) {
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [loginEmail, setLoginEmail] = useState('surfads02@gmail.com');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
 
   // Filters state for Reservations
@@ -62,6 +74,7 @@ export default function AdminPanel({
     imagesText: string;
     status: Room['status'];
     totalUnits: number;
+    isPriceOnRequest: boolean;
   }>({
     name: '',
     type: 'standard',
@@ -72,7 +85,8 @@ export default function AdminPanel({
     amenitiesText: '',
     imagesText: '',
     status: 'available',
-    totalUnits: 10
+    totalUnits: 10,
+    isPriceOnRequest: false
   });
   const [isAddingRoom, setIsAddingRoom] = useState(false);
 
@@ -100,28 +114,320 @@ export default function AdminPanel({
     imageUrl: ''
   });
 
+  // Month selection state for calendar (0-indexed: 5 = June, 6 = July, 7 = August, etc.)
+  const [selectedMonth, setSelectedMonth] = useState<number>(6); // Default: July 2026
+  const [calendarPage, setCalendarPage] = useState<1 | 2 | 3>(1); // 1: Days 1-12, 2: Days 13-24, 3: Last 12 days
+
+  // State for cell interaction menu
+  const [activeCellMenu, setActiveCellMenu] = useState<{ roomId: string; date: string } | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+      if (currentUser) {
+        setShowSignUp(false);
+        setShowResetPassword(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = loginEmail.trim();
+    if (!email || !loginPassword) {
+      setLoginError('Por favor, preencha todos os campos.');
+      return;
+    }
+    setLoginError('');
+    setIsSubmitting(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, loginPassword);
+    } catch (err: any) {
+      console.error("Login error:", err);
+      const errorCode = err.code;
+      if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential') {
+        setLoginError('E-mail ou senha incorretos. Verifique seus dados.');
+      } else if (errorCode === 'auth/invalid-email') {
+        setLoginError('O formato do e-mail é inválido.');
+      } else if (errorCode === 'auth/user-disabled') {
+        setLoginError('Esta conta foi desativada. Entre em contato com o suporte.');
+      } else if (errorCode === 'auth/too-many-requests') {
+        setLoginError('Muitas tentativas malsucedidas. Tente novamente mais tarde.');
+      } else {
+        setLoginError(`Erro (${errorCode}): Tente novamente ou use outro navegador.`);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = loginEmail.trim();
+    if (!email || !loginPassword) {
+      setLoginError('Preencha e-mail e senha para criar o acesso.');
+      return;
+    }
+    if (loginPassword.length < 6) {
+      setLoginError('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+    setLoginError('');
+    setIsSubmitting(true);
+    try {
+      await createUserWithEmailAndPassword(auth, email, loginPassword);
+    } catch (err: any) {
+      console.error("SignUp error:", err);
+      const errorCode = err.code;
+      if (errorCode === 'auth/email-already-in-use') {
+        setLoginError('Este e-mail já está sendo usado por outra conta.');
+      } else if (errorCode === 'auth/invalid-email') {
+        setLoginError('O formato do e-mail digitado é inválido.');
+      } else if (errorCode === 'auth/operation-not-allowed') {
+        setLoginError('O cadastro com e-mail/senha não está habilitado no Console do Firebase. Ative-o em Autenticação > Sign-in method.');
+      } else {
+        setLoginError(`Erro ao criar conta: ${err.message || 'Verifique os dados e tente novamente.'}`);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = loginEmail.trim();
+    if (!email) {
+      setLoginError('Por favor, digite seu e-mail para receber o link de redefinição.');
+      return;
+    }
+    setLoginError('');
+    setIsSubmitting(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetSent(true);
+    } catch (err: any) {
+      console.error("Reset password error:", err);
+      const errorCode = err.code;
+      if (errorCode === 'auth/user-not-found') {
+        setLoginError('Não encontramos nenhuma conta com este e-mail.');
+      } else if (errorCode === 'auth/invalid-email') {
+        setLoginError('O formato do e-mail digitado é inválido.');
+      } else {
+        setLoginError('Erro ao enviar e-mail. Verifique se o endereço está correto.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      onClose();
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center">
+        <div className="relative mb-6">
+          <div className="w-16 h-16 border-4 border-stone-100 border-t-turquoise rounded-full animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <ShieldCheck className="w-6 h-6 text-turquoise" />
+          </div>
+        </div>
+        <p className="text-stone-500 font-heading font-bold animate-pulse tracking-widest uppercase text-xs">Validando Acesso...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-stone-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-stone-200">
+          <div className="bg-ocean p-8 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+            <div className="relative z-10">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl mb-4 border border-white/20">
+                {showResetPassword ? <Key className="w-8 h-8 text-white" /> : showSignUp ? <UserIcon className="w-8 h-8 text-white" /> : <Lock className="w-8 h-8 text-white" />}
+              </div>
+              <h1 className="text-2xl font-heading font-extrabold text-white tracking-tight">
+                {showResetPassword ? 'Redefinir Senha' : showSignUp ? 'Criar Conta Admin' : 'Painel Admin Ykapê'}
+              </h1>
+              <p className="text-turquoise/80 text-xs font-bold uppercase tracking-widest mt-1">
+                {showResetPassword ? 'Enviaremos um link para seu e-mail' : showSignUp ? 'Cadastre seu e-mail de acesso' : 'Acesso Restrito'}
+              </p>
+            </div>
+          </div>
+          
+          <div className="p-8">
+            {resetSent ? (
+              <div className="space-y-6 text-center animate-in zoom-in-95 duration-300">
+                <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto border border-emerald-100 shadow-sm">
+                  <CheckCircle className="w-10 h-10" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-heading font-bold text-stone-800 text-lg">E-mail Enviado!</h3>
+                  <p className="text-stone-500 text-sm leading-relaxed">
+                    Verifique sua caixa de entrada (e spam) para seguir as instruções de redefinição.
+                  </p>
+                </div>
+                <button 
+                  onClick={() => { setShowResetPassword(false); setResetSent(false); }}
+                  className="w-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold py-4 rounded-2xl transition-all"
+                >
+                  Voltar ao Login
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={showResetPassword ? handleResetPassword : showSignUp ? handleSignUp : handleLogin} className="space-y-6">
+                {loginError && (
+                  <div className="bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+                    <AlertTriangle className="w-5 h-5 shrink-0" />
+                    {loginError}
+                  </div>
+                )}
+                
+                <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider ml-1">E-mail</label>
+                    <div className="relative group">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-turquoise transition-colors" />
+                      <input 
+                        required 
+                        type="email" 
+                        disabled={isSubmitting}
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
+                        placeholder="admin@pousadaykape.com"
+                        className="w-full bg-stone-50 border border-stone-100 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/20 focus:border-turquoise transition-all placeholder:text-stone-300 disabled:opacity-50"
+                      />
+                    </div>
+                  </div>
+                  
+                  {!showResetPassword && (
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between items-center ml-1">
+                        <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Senha</label>
+                        {!showSignUp && (
+                          <button 
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() => { setShowResetPassword(true); setLoginError(''); }}
+                            className="text-[10px] font-bold text-turquoise hover:text-turquoise-dark uppercase tracking-widest transition-colors disabled:opacity-50"
+                          >
+                            Esqueceu?
+                          </button>
+                        )}
+                      </div>
+                      <div className="relative group">
+                        <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-turquoise transition-colors" />
+                        <input 
+                          required 
+                          type="password" 
+                          disabled={isSubmitting}
+                          value={loginPassword}
+                          onChange={(e) => setLoginPassword(e.target.value)}
+                          placeholder="••••••••"
+                          className="w-full bg-stone-50 border border-stone-100 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/20 focus:border-turquoise transition-all placeholder:text-stone-300 disabled:opacity-50"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-turquoise hover:bg-turquoise-dark text-white font-heading font-extrabold py-4 rounded-2xl shadow-lg shadow-turquoise/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed group"
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      {showResetPassword ? 'Enviar Link de Redefinição' : showSignUp ? 'Criar Conta' : 'Entrar no Sistema'}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </button>
+                
+                <div className="flex flex-col gap-3">
+                  {(showResetPassword || showSignUp) && (
+                    <button 
+                      type="button"
+                      onClick={() => { setShowResetPassword(false); setShowSignUp(false); setLoginError(''); }}
+                      className="w-full text-stone-400 hover:text-stone-600 text-xs font-bold uppercase tracking-widest transition-colors"
+                    >
+                      Voltar ao Login
+                    </button>
+                  )}
+                  
+                  {!showResetPassword && !showSignUp && (
+                    <>
+                      <button 
+                        type="button"
+                        onClick={() => { setShowSignUp(true); setLoginError(''); }}
+                        className="w-full text-turquoise hover:text-turquoise-dark text-[11px] font-bold uppercase tracking-widest transition-colors py-1"
+                      >
+                        Não tem conta? Criar acesso
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={onClose}
+                        className="w-full text-stone-400 hover:text-stone-600 text-xs font-bold uppercase tracking-widest transition-colors py-2"
+                      >
+                        Voltar ao Site
+                      </button>
+                    </>
+                  )}
+                </div>
+              </form>
+            )}
+          </div>
+          
+          <div className="bg-stone-50 p-6 border-t border-stone-100">
+            <div className="flex items-center gap-4 text-[10px] text-stone-400 font-bold uppercase tracking-tighter">
+              <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> SSL Seguro</span>
+              <span className="flex items-center gap-1"><Droplets className="w-3 h-3" /> Ykapê Cloud</span>
+              <span className="ml-auto opacity-50">v2.4.1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ----- KPI CALCULATIONS -----
-  const totalRooms = 20; // Pousada Ykape has 20 apartments in total
+  const totalUnits = rooms.reduce((acc, curr) => acc + (curr.totalUnits || 1), 0);
   const reservationsThisMonth = reservations.length;
   
   const totalRevenue = reservations.reduce((acc, curr) => {
     if (curr.status !== 'cancelled') {
-      return acc + curr.totalValue;
+      return acc + (curr.totalValue || 0);
     }
     return acc;
   }, 0);
 
   const depositRevenue = reservations.reduce((acc, curr) => {
     if (curr.status !== 'cancelled') {
-      return acc + curr.depositPaid;
+      return acc + (curr.depositPaid || 0);
     }
     return acc;
   }, 0);
 
-  // Count active occupied units (Simulated for this month)
-  const occupiedCount = rooms.filter(r => r.status === 'occupied').length * 4; // simulated
-  const occupancyRate = 65; // percentage representation based on high-season
-  const availableRoomsCount = rooms.filter(r => r.status === 'available').length;
+  // Calculate current occupancy based on real reservations for today
+  const today = new Date().toISOString().split('T')[0];
+  const activeReservationsCount = reservations.filter(res => {
+    return (res.status === 'confirmed' || res.status === 'checked_in') && 
+           res.checkIn <= today && res.checkOut > today;
+  }).length;
+
+  const occupancyRate = totalUnits > 0 ? Math.round((activeReservationsCount / totalUnits) * 100) : 0;
+  const availableRoomsCount = totalUnits - activeReservationsCount;
 
   // ----- HANDLERS FOR RESERVATIONS -----
   const handleStatusChange = (resId: string, newStatus: Reservation['status']) => {
@@ -204,7 +510,8 @@ export default function AdminPanel({
       amenitiesText: room.amenities.join(', '),
       imagesText: room.images.join(', '),
       status: room.status,
-      totalUnits: room.totalUnits
+      totalUnits: room.totalUnits,
+      isPriceOnRequest: room.isPriceOnRequest || false
     });
   };
 
@@ -221,7 +528,8 @@ export default function AdminPanel({
       amenities: roomForm.amenitiesText.split(',').map(s => s.trim()).filter(Boolean),
       images: roomForm.imagesText.split(',').map(s => s.trim()).filter(Boolean),
       status: roomForm.status,
-      totalUnits: Number(roomForm.totalUnits)
+      totalUnits: Number(roomForm.totalUnits),
+      isPriceOnRequest: roomForm.isPriceOnRequest
     };
 
     if (editingRoom) {
@@ -316,11 +624,30 @@ export default function AdminPanel({
         blockedDates: updatedBlocked
       };
     }));
+    setActiveCellMenu(null);
   };
 
-  // Month selection state for calendar (0-indexed: 5 = June, 6 = July, 7 = August, etc.)
-  const [selectedMonth, setSelectedMonth] = useState<number>(6); // Default: July 2026
-  const [calendarPage, setCalendarPage] = useState<1 | 2 | 3>(1); // 1: Days 1-12, 2: Days 13-24, 3: Last 12 days
+  const handleStartReservationFromCalendar = (roomId: string, date: string) => {
+    const room = rooms.find(r => r.id === roomId);
+    if (!room) return;
+
+    // Pre-calculate check-out (next day)
+    const checkInDate = new Date(date);
+    const checkOutDate = new Date(checkInDate);
+    checkOutDate.setDate(checkOutDate.getDate() + 1);
+    const checkOutStr = checkOutDate.toISOString().split('T')[0];
+
+    setManualResForm({
+      ...manualResForm,
+      roomId: roomId,
+      checkIn: date,
+      checkOut: checkOutStr,
+    });
+    
+    setActiveSection('reservas');
+    setIsAddingReservation(true);
+    setActiveCellMenu(null);
+  };
 
   const MONTHS_OF_2026 = [
     { value: 5, label: "Junho de 2026" },
@@ -357,16 +684,24 @@ export default function AdminPanel({
         
         {/* Header Block */}
         <div className="bg-ocean text-white p-6 rounded-2xl shadow-md mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <span className="text-xs uppercase tracking-widest text-turquoise font-bold flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-turquoise" /> Painel de Administração Integrado
-            </span>
-            <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-sand mt-1">
-              Pousada Ykape Back-Office
-            </h1>
-            <p className="text-xs text-gray-200 mt-1 leading-normal">
-              Gerenciamento completo de reservas pré-pagas (50%), status de acomodações, cardápio, fotos e calendário de ocupação.
-            </p>
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex w-12 h-12 bg-white/10 rounded-xl items-center justify-center border border-white/20 shrink-0">
+              <UserIcon className="w-6 h-6 text-turquoise" />
+            </div>
+            <div>
+              <span className="text-xs uppercase tracking-widest text-turquoise font-bold flex items-center gap-1">
+                <ShieldCheck className="w-4 h-4 text-turquoise" /> Painel de Administração Integrado
+              </span>
+              <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-sand mt-1">
+                Pousada Ykape Back-Office
+              </h1>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                <p className="text-[10px] text-gray-200 uppercase font-bold tracking-wider">
+                  Logado como: <span className="text-turquoise">{user?.email}</span>
+                </p>
+              </div>
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -380,7 +715,7 @@ export default function AdminPanel({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Sidebar / Tabs Column */}
-          <div className="lg:col-span-3 space-y-2">
+          <div className="lg:col-span-3 space-y-4">
             <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-200/60">
               <h3 className="font-heading font-semibold text-xs uppercase tracking-widest text-gray-400 mb-4 px-2">Menu Administrativo</h3>
               
@@ -427,7 +762,7 @@ export default function AdminPanel({
                     activeSection === 'cardapio' ? 'bg-ocean text-white shadow-sm' : 'text-gray-600 hover:bg-stone-50'
                   }`}
                 >
-                  <BookOpen className="w-4 h-4" /> Gestão de Cardápio
+                  <Utensils className="w-4 h-4" /> Cardápio Digital
                 </button>
 
                 <button
@@ -436,8 +771,17 @@ export default function AdminPanel({
                     activeSection === 'galeria' ? 'bg-ocean text-white shadow-sm' : 'text-gray-600 hover:bg-stone-50'
                   }`}
                 >
-                  <ImageIcon className="w-4 h-4" /> Gestão da Galeria
+                  <ImageIcon className="w-4 h-4" /> Galeria de Fotos
                 </button>
+
+                <div className="pt-4 mt-4 border-t border-gray-100">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold text-rose-500 hover:bg-rose-50 transition-all cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" /> Sair do Sistema
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -494,7 +838,7 @@ export default function AdminPanel({
                     </div>
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400">Acomodações Ativas</span>
-                      <h4 className="text-xl font-bold text-gray-800">{availableRoomsCount} / {rooms.length}</h4>
+                      <h4 className="text-xl font-bold text-gray-800">{availableRoomsCount} / {totalUnits}</h4>
                     </div>
                   </div>
 
@@ -506,7 +850,7 @@ export default function AdminPanel({
                   <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200/60 space-y-4">
                     <h3 className="font-heading font-bold text-sm text-ocean border-b border-gray-100 pb-2">Projection & Informações da Pousada</h3>
                     <div className="space-y-3 text-xs leading-relaxed">
-                      <p>A <strong>Pousada Ykape</strong> conta com 20 apartamentos divididos entre Standard (R$ 240) e Comfort (R$ 340). Seu faturamento total provisionado é de <strong>R$ {totalRevenue.toFixed(2)}</strong>.</p>
+                      <p>A <strong>Pousada Ykape</strong> conta com {totalUnits} acomodações. Seu faturamento total provisionado é de <strong>R$ {totalRevenue.toFixed(2)}</strong>.</p>
                       
                       <div className="p-3 bg-amber-50 rounded border border-amber-200/60 flex gap-2">
                         <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
@@ -754,8 +1098,19 @@ export default function AdminPanel({
                     <p className="text-xs text-gray-500">Visualização profissional estilo Booking.com para monitoramento diário, reservas, bloqueios e disponibilidade geral.</p>
                   </div>
                   
-                  {/* Month Selection Selector */}
-                  <div className="flex items-center gap-3 bg-stone-50 border border-stone-200 px-3 py-2 rounded-xl">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      onClick={() => {
+                        setActiveSection('reservas');
+                        setIsAddingReservation(true);
+                      }}
+                      className="bg-turquoise hover:bg-turquoise-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1 cursor-pointer shadow-sm"
+                    >
+                      <Plus className="w-4 h-4" /> Nova Reserva Manual
+                    </button>
+
+                    {/* Month Selection Selector */}
+                    <div className="flex items-center gap-3 bg-stone-50 border border-stone-200 px-3 py-2 rounded-xl">
                     <label htmlFor="calendar-month-select" className="text-xs font-bold text-gray-500 uppercase tracking-wider">Mês:</label>
                     <select
                       id="calendar-month-select"
@@ -772,8 +1127,9 @@ export default function AdminPanel({
                     </select>
                   </div>
                 </div>
+              </div>
 
-                {/* Instruction Alert box */}
+              {/* Instruction Alert box */}
                 <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed space-y-1">
                   <p className="font-bold flex items-center gap-1">
                     <span className="text-base">💡</span> Gestão de Disponibilidade Manual:
@@ -830,22 +1186,39 @@ export default function AdminPanel({
                   <div className="min-w-[700px] bg-white rounded-lg overflow-hidden border border-gray-200/80 shadow-inner">
                     
                     {/* Month Header row */}
-                    <div className="bg-ocean text-white p-3 flex justify-between items-center text-xs font-bold border-b border-gray-200">
-                      <span>📆 {getSelectedMonthLabel()} (Dias {calendarPage === 1 ? '1 a 12' : calendarPage === 2 ? '13 a 24' : `25 a ${daysInSelectedMonth}`})</span>
-                      <div className="flex gap-4">
-                        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-emerald-500 rounded"></span> Reservado</span>
-                        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-gray-200 rounded"></span> Livre</span>
-                        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-rose-500 rounded"></span> Bloqueio Manual</span>
-                        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-amber-400 rounded"></span> Manutenção Geral</span>
+                    <div className="bg-ocean text-white p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-gray-200">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-5 h-5 text-turquoise" />
+                        <span className="font-heading font-bold text-sm tracking-wide">
+                          Mapa de Ocupação: {getSelectedMonthLabel()}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-emerald-500 rounded-sm shadow-sm"></div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-100">Reservado</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-gray-200 rounded-sm shadow-sm"></div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-100">Disponível</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-rose-500 rounded-sm shadow-sm"></div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-100">Bloqueio</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-amber-400 rounded-sm shadow-sm"></div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-100">Manutenção</span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Grid Layout */}
-                    <div className="grid grid-cols-16 border-b border-gray-100 font-mono text-[11px] bg-stone-100 text-gray-500 font-bold text-center">
-                      <div className="col-span-4 p-2 text-left text-gray-600 font-heading">Acomodação</div>
+                    {/* Grid Layout Header (Days) */}
+                    <div className="grid grid-cols-16 border-b border-gray-100 font-mono text-[10px] bg-stone-50 text-gray-400 font-bold text-center">
+                      <div className="col-span-4 p-2.5 text-left text-gray-500 font-heading uppercase tracking-widest">Acomodação</div>
                       {activeDays.map(day => (
-                        <div key={day} className="p-2 border-l border-gray-200">
-                          {day.toString().padStart(2, '0')}
+                        <div key={day} className="p-2.5 border-l border-gray-100 flex flex-col items-center justify-center">
+                          <span className="text-[12px] text-ocean">{day.toString().padStart(2, '0')}</span>
                         </div>
                       ))}
                     </div>
@@ -856,9 +1229,14 @@ export default function AdminPanel({
                         return (
                           <div key={room.id} className="grid grid-cols-16 items-center text-xs">
                             {/* Room info header col */}
-                            <div className="col-span-4 p-3 bg-stone-50 border-r border-gray-100">
-                              <strong className="text-gray-800 text-xs block truncate">{room.name}</strong>
-                              <span className="text-[9px] text-gray-400 block uppercase font-bold">{room.type} • R$ {room.pricePerNight}</span>
+                            <div className="col-span-4 p-3 bg-stone-50 border-r border-gray-100 flex items-center gap-3">
+                              <div className="w-8 h-8 rounded bg-stone-200 overflow-hidden shrink-0 hidden sm:block">
+                                <img src={room.images[0]} alt="" className="w-full h-full object-cover" />
+                              </div>
+                              <div className="min-w-0">
+                                <strong className="text-gray-800 text-[11px] block truncate leading-tight">{room.name}</strong>
+                                <span className="text-[9px] text-gray-400 block uppercase font-bold">{room.type} • R$ {room.pricePerNight}</span>
+                              </div>
                             </div>
 
                             {/* Daily status block mappings */}
@@ -892,14 +1270,18 @@ export default function AdminPanel({
                                 blockText = '✕';
                                 blockTooltip = 'Bloqueado Manual (Clique para Liberar)';
                               } else {
-                                blockBg = 'bg-white hover:bg-rose-50 text-gray-400 hover:text-rose-500 cursor-pointer';
+                                blockBg = 'bg-white hover:bg-turquoise/10 text-gray-400 hover:text-turquoise cursor-pointer';
                                 blockText = '';
-                                blockTooltip = 'Disponível (Clique para Bloquear)';
+                                blockTooltip = 'Disponível (Clique para Ações)';
                               }
 
                               const handleCellClick = () => {
                                 if (activeRes || room.status === 'maintenance') return;
-                                handleToggleDayAvailability(room.id, dayStr);
+                                if (activeCellMenu?.roomId === room.id && activeCellMenu?.date === dayStr) {
+                                  setActiveCellMenu(null);
+                                } else {
+                                  setActiveCellMenu({ roomId: room.id, date: dayStr });
+                                }
                               };
 
                               return (
@@ -911,6 +1293,34 @@ export default function AdminPanel({
                                 >
                                   {blockText}
                                   
+                                  {/* Interaction Menu (Pop-over) */}
+                                  {activeCellMenu?.roomId === room.id && activeCellMenu?.date === dayStr && (
+                                    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-[60] min-w-[160px] p-1.5 animate-in zoom-in-95 duration-100">
+                                      <div className="text-[10px] text-gray-400 font-bold px-2 py-1 border-b border-gray-100 mb-1">Dia {day.toString().padStart(2, '0')} • {room.name}</div>
+                                      <button 
+                                        onClick={(e) => { e.stopPropagation(); handleStartReservationFromCalendar(room.id, dayStr); }}
+                                        className="w-full text-left flex items-center gap-2 px-2 py-1.5 hover:bg-turquoise/10 text-turquoise-dark rounded text-[11px] font-bold transition-colors"
+                                      >
+                                        <Plus className="w-3.5 h-3.5" /> Nova Reserva
+                                      </button>
+                                      <button 
+                                        onClick={(e) => { e.stopPropagation(); handleToggleDayAvailability(room.id, dayStr); }}
+                                        className="w-full text-left flex items-center gap-2 px-2 py-1.5 hover:bg-rose-50 text-rose-600 rounded text-[11px] font-bold transition-colors"
+                                      >
+                                        {isManuallyBlocked ? <CheckCircle className="w-3.5 h-3.5" /> : <Trash className="w-3.5 h-3.5" />}
+                                        {isManuallyBlocked ? 'Liberar Data' : 'Bloquear Data'}
+                                      </button>
+                                      <div className="border-t border-gray-100 mt-1 pt-1">
+                                        <button 
+                                          onClick={(e) => { e.stopPropagation(); setActiveCellMenu(null); }}
+                                          className="w-full text-center px-2 py-1 hover:bg-gray-100 text-gray-400 rounded text-[10px] font-semibold"
+                                        >
+                                          Fechar
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
+
                                   {/* Tooltip Hover Bubble */}
                                   <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
                                     {blockTooltip}
@@ -994,8 +1404,16 @@ export default function AdminPanel({
                           <input required type="number" value={roomForm.capacity} onChange={(e) => setRoomForm({ ...roomForm, capacity: Number(e.target.value) })} className="w-full bg-white border border-gray-200 rounded px-2.5 py-1.5 text-center" min={1} max={6} />
                         </div>
                         <div>
-                          <label className="block text-gray-500 mb-1">Tarifa</label>
-                          <input disabled type="text" value="Sob Consulta" className="w-full bg-stone-100 text-stone-500 border border-stone-200 rounded px-2.5 py-1.5 text-center cursor-not-allowed" />
+                          <label className="block text-gray-500 mb-1">Tarifa (Preço/Noite) *</label>
+                          <input 
+                            required={!roomForm.isPriceOnRequest} 
+                            disabled={roomForm.isPriceOnRequest}
+                            type="number" 
+                            value={roomForm.pricePerNight} 
+                            onChange={(e) => setRoomForm({ ...roomForm, pricePerNight: Number(e.target.value) })} 
+                            className={`w-full border rounded px-2.5 py-1.5 text-center focus:outline-none ${roomForm.isPriceOnRequest ? 'bg-gray-100 border-gray-200 text-gray-400' : 'bg-white border-gray-200'}`} 
+                            min={0} 
+                          />
                         </div>
                         <div>
                           <label className="block text-gray-500 mb-1">Total Unidades *</label>
@@ -1003,9 +1421,15 @@ export default function AdminPanel({
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 pt-5">
-                        <input type="checkbox" id="hasAirCond" checked={roomForm.hasAirConditioning} onChange={(e) => setRoomForm({ ...roomForm, hasAirConditioning: e.target.checked })} className="w-4 h-4 text-turquoise" />
-                        <label htmlFor="hasAirCond" className="font-semibold text-gray-700">Possui Ar Condicionado?</label>
+                      <div className="flex flex-wrap items-center gap-6 pt-2">
+                        <div className="flex items-center gap-2">
+                          <input type="checkbox" id="hasAirCond" checked={roomForm.hasAirConditioning} onChange={(e) => setRoomForm({ ...roomForm, hasAirConditioning: e.target.checked })} className="w-4 h-4 text-turquoise" />
+                          <label htmlFor="hasAirCond" className="font-semibold text-gray-700">Ar Condicionado</label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <input type="checkbox" id="isPriceOnRequest" checked={roomForm.isPriceOnRequest} onChange={(e) => setRoomForm({ ...roomForm, isPriceOnRequest: e.target.checked })} className="w-4 h-4 text-turquoise" />
+                          <label htmlFor="isPriceOnRequest" className="font-semibold text-gray-700">Sob Consulta</label>
+                        </div>
                       </div>
 
                       <div className="sm:col-span-2">
@@ -1038,7 +1462,7 @@ export default function AdminPanel({
                       <div className="relative h-32 w-full bg-stone-100">
                         <img src={room.images[0]} alt={room.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                         <div className="absolute top-2 right-2 bg-white/90 backdrop-blur text-turquoise-dark text-[10px] font-bold px-2.5 py-0.5 rounded shadow uppercase">
-                          Sob Consulta
+                          {room.pricePerNight > 0 ? `R$ ${room.pricePerNight}` : 'Sob Consulta'}
                         </div>
                       </div>
                       <div className="p-4 space-y-3">
