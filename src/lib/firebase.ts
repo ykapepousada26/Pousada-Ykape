@@ -52,7 +52,7 @@ export async function getCollectionData<T>(collectionName: string, initialData: 
       return seededData;
     }
     
-    return snapshot.docs.map(doc => ({ ...doc.data() }) as T);
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as T);
   } catch (error) {
     console.error(`Error loading or seeding ${collectionName}:`, error);
     return initialData;
