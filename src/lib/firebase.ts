@@ -122,20 +122,18 @@ export async function syncCollectionToFirestore<T extends { id: string }>(
     });
 
     if (updates.length > 0) {
-      console.log(`[Firestore Sync] ${collectionName}: Syncing ${updates.length} updates/additions`);
-      for (const item of updates) {
-        await saveDocument(collectionName, item.id, item);
-      }
+      console.log(`[Firestore Sync] ${collectionName}: Syncing ${updates.length} updates/additions...`);
+      await Promise.all(updates.map(item => saveDocument(collectionName, item.id, item)));
+      console.log(`[Firestore Sync] ${collectionName}: Successfully synced updates.`);
     }
 
     // Determine deletions (only if prev is NOT empty to avoid clearing on first load)
     if (prev.length > 0) {
       const deletions = prev.filter(prevItem => !next.find(n => n.id === prevItem.id));
       if (deletions.length > 0) {
-        console.log(`[Firestore Sync] ${collectionName}: Syncing ${deletions.length} deletions`);
-        for (const item of deletions) {
-          await deleteDocument(collectionName, item.id);
-        }
+        console.log(`[Firestore Sync] ${collectionName}: Syncing ${deletions.length} deletions...`);
+        await Promise.all(deletions.map(item => deleteDocument(collectionName, item.id)));
+        console.log(`[Firestore Sync] ${collectionName}: Successfully synced deletions.`);
       }
     }
   } catch (error) {

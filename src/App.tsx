@@ -104,7 +104,8 @@ export default function App() {
   const isInitialLoadReservations = useRef(true);
   const isInitialLoadReviews = useRef(true);
 
-  const [isSyncing, setIsSyncing] = useState(false);
+  const [activeSyncs, setActiveSyncs] = useState(0);
+  const isSyncing = activeSyncs > 0;
 
   useEffect(() => {
     if (isLoading) return;
@@ -113,11 +114,19 @@ export default function App() {
       prevRoomsRef.current = rooms;
       return;
     }
+    const currentData = rooms;
+    const previousData = prevRoomsRef.current;
+    prevRoomsRef.current = currentData;
+
     const sync = async () => {
-      setIsSyncing(true);
-      await syncCollectionToFirestore('rooms', prevRoomsRef.current, rooms);
-      prevRoomsRef.current = rooms;
-      setIsSyncing(false);
+      try {
+        setActiveSyncs(prev => prev + 1);
+        await syncCollectionToFirestore('rooms', previousData, currentData);
+      } catch (err) {
+        console.error('Error syncing rooms:', err);
+      } finally {
+        setActiveSyncs(prev => Math.max(0, prev - 1));
+      }
     };
     sync();
   }, [rooms, isLoading]);
@@ -129,9 +138,19 @@ export default function App() {
       prevMenuRef.current = menuItems;
       return;
     }
+    const currentData = menuItems;
+    const previousData = prevMenuRef.current;
+    prevMenuRef.current = currentData;
+
     const sync = async () => {
-      await syncCollectionToFirestore('menuItems', prevMenuRef.current, menuItems);
-      prevMenuRef.current = menuItems;
+      try {
+        setActiveSyncs(prev => prev + 1);
+        await syncCollectionToFirestore('menuItems', previousData, currentData);
+      } catch (err) {
+        console.error('Error syncing menu:', err);
+      } finally {
+        setActiveSyncs(prev => Math.max(0, prev - 1));
+      }
     };
     sync();
   }, [menuItems, isLoading]);
@@ -143,9 +162,19 @@ export default function App() {
       prevGalleryRef.current = gallery;
       return;
     }
+    const currentData = gallery;
+    const previousData = prevGalleryRef.current;
+    prevGalleryRef.current = currentData;
+
     const sync = async () => {
-      await syncCollectionToFirestore('gallery', prevGalleryRef.current, gallery);
-      prevGalleryRef.current = gallery;
+      try {
+        setActiveSyncs(prev => prev + 1);
+        await syncCollectionToFirestore('gallery', previousData, currentData);
+      } catch (err) {
+        console.error('Error syncing gallery:', err);
+      } finally {
+        setActiveSyncs(prev => Math.max(0, prev - 1));
+      }
     };
     sync();
   }, [gallery, isLoading]);
@@ -157,9 +186,19 @@ export default function App() {
       prevReservationsRef.current = reservations;
       return;
     }
+    const currentData = reservations;
+    const previousData = prevReservationsRef.current;
+    prevReservationsRef.current = currentData;
+
     const sync = async () => {
-      await syncCollectionToFirestore('reservations', prevReservationsRef.current, reservations);
-      prevReservationsRef.current = reservations;
+      try {
+        setActiveSyncs(prev => prev + 1);
+        await syncCollectionToFirestore('reservations', previousData, currentData);
+      } catch (err) {
+        console.error('Error syncing reservations:', err);
+      } finally {
+        setActiveSyncs(prev => Math.max(0, prev - 1));
+      }
     };
     sync();
   }, [reservations, isLoading]);
@@ -171,9 +210,19 @@ export default function App() {
       prevReviewsRef.current = reviews;
       return;
     }
+    const currentData = reviews;
+    const previousData = prevReviewsRef.current;
+    prevReviewsRef.current = currentData;
+
     const sync = async () => {
-      await syncCollectionToFirestore('reviews', prevReviewsRef.current, reviews);
-      prevReviewsRef.current = reviews;
+      try {
+        setActiveSyncs(prev => prev + 1);
+        await syncCollectionToFirestore('reviews', previousData, currentData);
+      } catch (err) {
+        console.error('Error syncing reviews:', err);
+      } finally {
+        setActiveSyncs(prev => Math.max(0, prev - 1));
+      }
     };
     sync();
   }, [reviews, isLoading]);
