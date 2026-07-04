@@ -64,7 +64,13 @@ export async function getCollectionData<T>(collectionName: string, initialData: 
  */
 export async function saveDocument<T>(collectionName: string, docId: string, data: any): Promise<void> {
   try {
-    await setDoc(doc(db, collectionName, docId), data);
+    if (!docId) {
+      console.warn(`[Firestore] Attempted to save document to ${collectionName} without a docId.`);
+      return;
+    }
+    // Sanitize data: remove any functions and ensure it's a plain object
+    const sanitizedData = JSON.parse(JSON.stringify(data));
+    await setDoc(doc(db, collectionName, docId), sanitizedData, { merge: true });
   } catch (error) {
     console.error(`Error saving document ${docId} in ${collectionName}:`, error);
     throw error;
@@ -108,26 +114,28 @@ export async function syncCollectionToFirestore<T extends { id: string }>(
   next: T[]
 ): Promise<void> {
   try {
-    // Find added or updated items
+    // Determine added/updated items
+    // If prev is empty, we check EVERYTHING in next against Firestore (safe for small collections)
     const updates = next.filter(nextItem => {
       const prevItem = prev.find(p => p.id === nextItem.id);
       return !prevItem || JSON.stringify(prevItem) !== JSON.stringify(nextItem);
     });
 
     if (updates.length > 0) {
-      console.log(`[Firestore Sync] Syncing ${updates.length} updates/additions to ${collectionName}`);
+      console.log(`[Firestore Sync] ${collectionName}: Syncing ${updates.length} updates/additions`);
       for (const item of updates) {
         await saveDocument(collectionName, item.id, item);
       }
     }
 
-    // Find deleted items
-    const deletions = prev.filter(prevItem => !next.find(n => n.id === prevItem.id));
-
-    if (deletions.length > 0) {
-      console.log(`[Firestore Sync] Syncing ${deletions.length} deletions from ${collectionName}`);
-      for (const item of deletions) {
-        await deleteDocument(collectionName, item.id);
+    // Determine deletions (only if prev is NOT empty to avoid clearing on first load)
+    if (prev.length > 0) {
+      const deletions = prev.filter(prevItem => !next.find(n => n.id === prevItem.id));
+      if (deletions.length > 0) {
+        console.log(`[Firestore Sync] ${collectionName}: Syncing ${deletions.length} deletions`);
+        for (const item of deletions) {
+          await deleteDocument(collectionName, item.id);
+        }
       }
     }
   } catch (error) {

@@ -6,7 +6,7 @@ import {
   MapPin as MapPinIcon, Calendar, ArrowRight, ExternalLink,
   ChevronLeft, ChevronRight, Star, Quote, Clock, Flame, 
   Utensils, Layers, Activity, Shield, Percent, CreditCard, Droplets,
-  ChevronDown, ChevronUp, HelpCircle, MessageSquare
+  ChevronDown, ChevronUp, HelpCircle, MessageSquare, RefreshCw
 } from 'lucide-react';
 
 import { Room, MenuItem, Review, GalleryItem, Reservation, BookingSearch } from './types';
@@ -91,46 +91,92 @@ export default function App() {
 
   const [reviews, _setReviews] = useState<Review[]>(INITIAL_REVIEWS);
 
-  // Wrapped setters that automatically sync to Firestore when changed via AdminPanel
-  const setRooms = (value: React.SetStateAction<Room[]>) => {
-    _setRooms(prev => {
-      const next = typeof value === 'function' ? (value as any)(prev) : value;
-      syncCollectionToFirestore('rooms', prev, next);
-      return next;
-    });
-  };
+  // Refs to track previous state for syncing
+  const prevRoomsRef = useRef<Room[]>([]);
+  const prevMenuRef = useRef<MenuItem[]>([]);
+  const prevGalleryRef = useRef<GalleryItem[]>([]);
+  const prevReservationsRef = useRef<Reservation[]>([]);
+  const prevReviewsRef = useRef<Review[]>([]);
 
-  const setMenuItems = (value: React.SetStateAction<MenuItem[]>) => {
-    _setMenuItems(prev => {
-      const next = typeof value === 'function' ? (value as any)(prev) : value;
-      syncCollectionToFirestore('menuItems', prev, next);
-      return next;
-    });
-  };
+  const isInitialLoadRooms = useRef(true);
+  const isInitialLoadMenu = useRef(true);
+  const isInitialLoadGallery = useRef(true);
+  const isInitialLoadReservations = useRef(true);
+  const isInitialLoadReviews = useRef(true);
 
-  const setGallery = (value: React.SetStateAction<GalleryItem[]>) => {
-    _setGallery(prev => {
-      const next = typeof value === 'function' ? (value as any)(prev) : value;
-      syncCollectionToFirestore('gallery', prev, next);
-      return next;
-    });
-  };
+  const [isSyncing, setIsSyncing] = useState(false);
 
-  const setReservations = (value: React.SetStateAction<Reservation[]>) => {
-    _setReservations(prev => {
-      const next = typeof value === 'function' ? (value as any)(prev) : value;
-      syncCollectionToFirestore('reservations', prev, next);
-      return next;
-    });
-  };
+  useEffect(() => {
+    if (isLoading) return;
+    if (isInitialLoadRooms.current) {
+      isInitialLoadRooms.current = false;
+      prevRoomsRef.current = rooms;
+      return;
+    }
+    const sync = async () => {
+      setIsSyncing(true);
+      await syncCollectionToFirestore('rooms', prevRoomsRef.current, rooms);
+      prevRoomsRef.current = rooms;
+      setIsSyncing(false);
+    };
+    sync();
+  }, [rooms, isLoading]);
 
-  const setReviews = (value: React.SetStateAction<Review[]>) => {
-    _setReviews(prev => {
-      const next = typeof value === 'function' ? (value as any)(prev) : value;
-      syncCollectionToFirestore('reviews', prev, next);
-      return next;
-    });
-  };
+  useEffect(() => {
+    if (isLoading) return;
+    if (isInitialLoadMenu.current) {
+      isInitialLoadMenu.current = false;
+      prevMenuRef.current = menuItems;
+      return;
+    }
+    const sync = async () => {
+      await syncCollectionToFirestore('menuItems', prevMenuRef.current, menuItems);
+      prevMenuRef.current = menuItems;
+    };
+    sync();
+  }, [menuItems, isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (isInitialLoadGallery.current) {
+      isInitialLoadGallery.current = false;
+      prevGalleryRef.current = gallery;
+      return;
+    }
+    const sync = async () => {
+      await syncCollectionToFirestore('gallery', prevGalleryRef.current, gallery);
+      prevGalleryRef.current = gallery;
+    };
+    sync();
+  }, [gallery, isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (isInitialLoadReservations.current) {
+      isInitialLoadReservations.current = false;
+      prevReservationsRef.current = reservations;
+      return;
+    }
+    const sync = async () => {
+      await syncCollectionToFirestore('reservations', prevReservationsRef.current, reservations);
+      prevReservationsRef.current = reservations;
+    };
+    sync();
+  }, [reservations, isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (isInitialLoadReviews.current) {
+      isInitialLoadReviews.current = false;
+      prevReviewsRef.current = reviews;
+      return;
+    }
+    const sync = async () => {
+      await syncCollectionToFirestore('reviews', prevReviewsRef.current, reviews);
+      prevReviewsRef.current = reviews;
+    };
+    sync();
+  }, [reviews, isLoading]);
 
   // Load Firestore data on mount
   useEffect(() => {
@@ -335,7 +381,7 @@ export default function App() {
 
   // Receive new reservation from Booking Flow
   const handleNewReservationCreated = (newRes: Reservation) => {
-    setReservations(prev => [newRes, ...prev]);
+    _setReservations(prev => [newRes, ...prev]);
   };
 
   // Contact form submit simulator
@@ -444,17 +490,25 @@ export default function App() {
 
       {/* 2. ADMIN PANEL OVERLAY OR PUBLIC SITE RENDERING */}
       {isAdminMode ? (
-        <AdminPanel 
-          rooms={rooms}
-          setRooms={setRooms}
-          menuItems={menuItems}
-          setMenuItems={setMenuItems}
-          gallery={gallery}
-          setGallery={setGallery}
-          reservations={reservations}
-          setReservations={setReservations}
-          onClose={() => setIsAdminMode(false)}
-        />
+        <>
+          <AdminPanel 
+            rooms={rooms}
+            setRooms={_setRooms}
+            menuItems={menuItems}
+            setMenuItems={_setMenuItems}
+            gallery={gallery}
+            setGallery={_setGallery}
+            reservations={reservations}
+            setReservations={_setReservations}
+            onClose={() => setIsAdminMode(false)}
+          />
+          {isSyncing && (
+            <div className="fixed bottom-4 right-4 bg-emerald-600 text-white px-4 py-2 rounded-full shadow-lg z-[100] flex items-center gap-2 text-sm font-medium animate-pulse">
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              Salvando alterações...
+            </div>
+          )}
+        </>
       ) : activeTab === 'politica-privacidade' ? (
         <PrivacyPolicy setActiveTab={setActiveTab} />
       ) : activeTab === 'politica-cancelamento' ? (
