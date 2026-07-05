@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { 
   Compass, Phone, Mail, Sparkles, Send, CheckCircle, 
@@ -91,12 +91,12 @@ export default function App() {
 
   const [reviews, _setReviews] = useState<Review[]>(INITIAL_REVIEWS);
 
-  // Refs to track previous state for syncing
-  const prevRoomsRef = useRef<Room[]>([]);
-  const prevMenuRef = useRef<MenuItem[]>([]);
-  const prevGalleryRef = useRef<GalleryItem[]>([]);
-  const prevReservationsRef = useRef<Reservation[]>([]);
-  const prevReviewsRef = useRef<Review[]>([]);
+  // Refs to track last successfully synced state
+  const lastSyncedRoomsRef = useRef<Room[]>([]);
+  const lastSyncedMenuRef = useRef<MenuItem[]>([]);
+  const lastSyncedGalleryRef = useRef<GalleryItem[]>([]);
+  const lastSyncedReservationsRef = useRef<Reservation[]>([]);
+  const lastSyncedReviewsRef = useRef<Review[]>([]);
 
   const isInitialLoadRooms = useRef(true);
   const isInitialLoadMenu = useRef(true);
@@ -104,128 +104,106 @@ export default function App() {
   const isInitialLoadReservations = useRef(true);
   const isInitialLoadReviews = useRef(true);
 
-  const [activeSyncs, setActiveSyncs] = useState(0);
-  const isSyncing = activeSyncs > 0;
+  const [activeSyncs, setActiveSyncs] = useState<Record<string, boolean>>({});
+  const isSyncing = Object.values(activeSyncs).some(Boolean);
+
+  const performSync = useCallback(async (collectionName: string, prev: any[], next: any[]) => {
+    try {
+      setActiveSyncs(p => ({ ...p, [collectionName]: true }));
+      await syncCollectionToFirestore(collectionName, prev, next);
+      return true;
+    } catch (err) {
+      console.error(`[Sync] Erro ao sincronizar ${collectionName}:`, err);
+      return false;
+    } finally {
+      setActiveSyncs(p => ({ ...p, [collectionName]: false }));
+    }
+  }, []);
 
   useEffect(() => {
     if (isLoading) return;
     if (isInitialLoadRooms.current) {
       isInitialLoadRooms.current = false;
-      prevRoomsRef.current = rooms;
+      lastSyncedRoomsRef.current = rooms;
       return;
     }
-    const currentData = rooms;
-    const previousData = prevRoomsRef.current;
-    prevRoomsRef.current = currentData;
 
-    const sync = async () => {
-      try {
-        setActiveSyncs(prev => prev + 1);
-        await syncCollectionToFirestore('rooms', previousData, currentData);
-      } catch (err) {
-        console.error('Error syncing rooms:', err);
-      } finally {
-        setActiveSyncs(prev => Math.max(0, prev - 1));
+    const timeout = setTimeout(async () => {
+      const success = await performSync('rooms', lastSyncedRoomsRef.current, rooms);
+      if (success) {
+        lastSyncedRoomsRef.current = rooms;
       }
-    };
-    sync();
-  }, [rooms, isLoading]);
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [rooms, isLoading, performSync]);
 
   useEffect(() => {
     if (isLoading) return;
     if (isInitialLoadMenu.current) {
       isInitialLoadMenu.current = false;
-      prevMenuRef.current = menuItems;
+      lastSyncedMenuRef.current = menuItems;
       return;
     }
-    const currentData = menuItems;
-    const previousData = prevMenuRef.current;
-    prevMenuRef.current = currentData;
 
-    const sync = async () => {
-      try {
-        setActiveSyncs(prev => prev + 1);
-        await syncCollectionToFirestore('menuItems', previousData, currentData);
-      } catch (err) {
-        console.error('Error syncing menu:', err);
-      } finally {
-        setActiveSyncs(prev => Math.max(0, prev - 1));
+    const timeout = setTimeout(async () => {
+      const success = await performSync('menuItems', lastSyncedMenuRef.current, menuItems);
+      if (success) {
+        lastSyncedMenuRef.current = menuItems;
       }
-    };
-    sync();
-  }, [menuItems, isLoading]);
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [menuItems, isLoading, performSync]);
 
   useEffect(() => {
     if (isLoading) return;
     if (isInitialLoadGallery.current) {
       isInitialLoadGallery.current = false;
-      prevGalleryRef.current = gallery;
+      lastSyncedGalleryRef.current = gallery;
       return;
     }
-    const currentData = gallery;
-    const previousData = prevGalleryRef.current;
-    prevGalleryRef.current = currentData;
 
-    const sync = async () => {
-      try {
-        setActiveSyncs(prev => prev + 1);
-        await syncCollectionToFirestore('gallery', previousData, currentData);
-      } catch (err) {
-        console.error('Error syncing gallery:', err);
-      } finally {
-        setActiveSyncs(prev => Math.max(0, prev - 1));
+    const timeout = setTimeout(async () => {
+      const success = await performSync('gallery', lastSyncedGalleryRef.current, gallery);
+      if (success) {
+        lastSyncedGalleryRef.current = gallery;
       }
-    };
-    sync();
-  }, [gallery, isLoading]);
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [gallery, isLoading, performSync]);
 
   useEffect(() => {
     if (isLoading) return;
     if (isInitialLoadReservations.current) {
       isInitialLoadReservations.current = false;
-      prevReservationsRef.current = reservations;
+      lastSyncedReservationsRef.current = reservations;
       return;
     }
-    const currentData = reservations;
-    const previousData = prevReservationsRef.current;
-    prevReservationsRef.current = currentData;
 
-    const sync = async () => {
-      try {
-        setActiveSyncs(prev => prev + 1);
-        await syncCollectionToFirestore('reservations', previousData, currentData);
-      } catch (err) {
-        console.error('Error syncing reservations:', err);
-      } finally {
-        setActiveSyncs(prev => Math.max(0, prev - 1));
+    const timeout = setTimeout(async () => {
+      const success = await performSync('reservations', lastSyncedReservationsRef.current, reservations);
+      if (success) {
+        lastSyncedReservationsRef.current = reservations;
       }
-    };
-    sync();
-  }, [reservations, isLoading]);
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [reservations, isLoading, performSync]);
 
   useEffect(() => {
     if (isLoading) return;
     if (isInitialLoadReviews.current) {
       isInitialLoadReviews.current = false;
-      prevReviewsRef.current = reviews;
+      lastSyncedReviewsRef.current = reviews;
       return;
     }
-    const currentData = reviews;
-    const previousData = prevReviewsRef.current;
-    prevReviewsRef.current = currentData;
 
-    const sync = async () => {
-      try {
-        setActiveSyncs(prev => prev + 1);
-        await syncCollectionToFirestore('reviews', previousData, currentData);
-      } catch (err) {
-        console.error('Error syncing reviews:', err);
-      } finally {
-        setActiveSyncs(prev => Math.max(0, prev - 1));
+    const timeout = setTimeout(async () => {
+      const success = await performSync('reviews', lastSyncedReviewsRef.current, reviews);
+      if (success) {
+        lastSyncedReviewsRef.current = reviews;
       }
-    };
-    sync();
-  }, [reviews, isLoading]);
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [reviews, isLoading, performSync]);
 
   // Load Firestore data on mount
   useEffect(() => {

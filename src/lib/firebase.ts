@@ -24,7 +24,7 @@ import firebaseConfig from '../../firebase-applet-config.json';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const db = getFirestore(app, (firebaseConfig as any).firestoreDatabaseId);
 export const auth = getAuth(app);
 
 export { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail };
@@ -138,6 +138,7 @@ export async function syncCollectionToFirestore<T extends { id: string }>(
     }
   } catch (error) {
     console.error(`Error syncing collection ${collectionName} to Firestore:`, error);
+    throw error;
   }
 }
 
