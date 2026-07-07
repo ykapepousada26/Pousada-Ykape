@@ -133,7 +133,7 @@ export default function PrivacyPolicy({ setActiveTab }: PrivacyPolicyProps) {
             </p>
             <p className="bg-stone-50 border border-gray-200 p-3 rounded-lg text-xs sm:text-sm inline-block">
               📧 E-mail: <strong>contato@pousadaykape.com.br</strong><br />
-              📞 WhatsApp: <strong>(13) 99765-4321</strong>
+              📞 WhatsApp: <strong>(13) 99621-3162</strong>
             </p>
           </section>
         </div>

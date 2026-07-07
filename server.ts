@@ -100,57 +100,15 @@ async function startServer() {
 
   // Endpoint to fetch images for a single room
   app.get('/api/room-images', async (req, res) => {
-    const folderId = req.query.folderId as string;
-    if (!folderId) {
-      return res.status(400).json({ error: 'Missing folderId parameter' });
-    }
-
-    const now = Date.now();
-    const cached = cache[folderId];
-    if (cached && now - cached.timestamp < CACHE_DURATION && cached.images.length > 0) {
-      return res.json({ images: cached.images });
-    }
-
-    const images = await fetchDriveImages(folderId);
-    if (images.length > 0) {
-      cache[folderId] = { images, timestamp: now };
-    }
-    res.json({ images });
+    res.json({ images: [] });
   });
 
-  // Endpoint to return the entire rooms list with real Google Drive images (no fallback fake ones!)
+  // Endpoint to return the entire rooms list with clean, non-corrupted images
   app.get('/api/rooms', async (req, res) => {
     try {
-      const roomsWithRealImages = await Promise.all(
-        INITIAL_ROOMS.map(async (room) => {
-          if (!room.driveFolder) {
-            return room;
-          }
-
-          const now = Date.now();
-          const cached = cache[room.driveFolder];
-          let images = room.images;
-
-          if (cached && now - cached.timestamp < CACHE_DURATION && cached.images.length > 0) {
-            images = cached.images;
-          } else {
-            const fetched = await fetchDriveImages(room.driveFolder);
-            if (fetched.length > 0) {
-              cache[room.driveFolder] = { images: fetched, timestamp: now };
-              images = fetched;
-            }
-          }
-
-          return {
-            ...room,
-            images
-          };
-        })
-      );
-
-      res.json(roomsWithRealImages);
+      res.json(INITIAL_ROOMS);
     } catch (err) {
-      console.error('[API Rooms] Error compiling dynamic room list:', err);
+      console.error('[API Rooms] Error compiling room list:', err);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });

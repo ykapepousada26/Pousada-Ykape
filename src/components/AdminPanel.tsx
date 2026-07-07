@@ -6,7 +6,7 @@ import {
   LogOut, Lock, Mail, Key, User as UserIcon, Loader2, ArrowRight, Shield, Droplets, Utensils
 } from 'lucide-react';
 import { Room, MenuItem, Review, GalleryItem, Reservation, GuestData } from '../types';
-import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, User, sendPasswordResetEmail } from '../lib/firebase';
+import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, User, sendPasswordResetEmail, saveDocument } from '../lib/firebase';
 
 interface AdminPanelProps {
   rooms: Room[];
@@ -18,6 +18,8 @@ interface AdminPanelProps {
   reservations: Reservation[];
   setReservations: React.Dispatch<React.SetStateAction<Reservation[]>>;
   onClose: () => void;
+  cardapioUrl: string;
+  setCardapioUrl: (url: string) => void;
 }
 
 type AdminSection = 'dashboard' | 'reservas' | 'quartos' | 'calendario' | 'cardapio' | 'galeria';
@@ -31,7 +33,9 @@ export default function AdminPanel({
   setGallery,
   reservations,
   setReservations,
-  onClose
+  onClose,
+  cardapioUrl,
+  setCardapioUrl
 }: AdminPanelProps) {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -1510,6 +1514,41 @@ export default function AdminPanel({
             {/* 5. SECTION: MENU GESTÃO */}
             {activeSection === 'cardapio' && (
               <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-200/60 space-y-6 animate-in fade-in duration-200">
+                
+                {/* Configurar Link do Cardápio Digital */}
+                <div className="bg-stone-50 border border-gray-200 p-4 sm:p-5 rounded-2xl space-y-3.5 text-left">
+                  <h4 className="font-heading font-bold text-sm text-ocean flex items-center gap-1.5">
+                    <Utensils className="w-4 h-4 text-turquoise" /> Link do Cardápio Digital (PDF / Catálogo do WhatsApp / Linktree)
+                  </h4>
+                  <p className="text-xs text-gray-500 leading-normal">
+                    Defina o link externo que os hóspedes acessarão ao clicar no botão de "Ver Cardápio" ou no CTA do cardápio digital (Ex: link do Drive, site externo, catálogo do WhatsApp Business ou similar).
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2.5 max-w-3xl">
+                    <input
+                      type="url"
+                      value={cardapioUrl}
+                      onChange={(e) => setCardapioUrl(e.target.value)}
+                      placeholder="Ex: https://wa.me/c/5513996213162"
+                      className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-ocean/40 text-gray-700"
+                    />
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await saveDocument('settings', 'config', { cardapioUrl });
+                          alert('Sucesso! O link do cardápio digital foi salvo no banco de dados e atualizado para todos os visitantes.');
+                        } catch (err) {
+                          console.error(err);
+                          alert('Ocorreu um erro ao salvar o link do cardápio.');
+                        }
+                      }}
+                      className="bg-turquoise hover:bg-turquoise-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg cursor-pointer whitespace-nowrap transition-colors flex items-center gap-1 shadow-sm"
+                    >
+                      Salvar Link do Cardápio
+                    </button>
+                  </div>
+                </div>
+
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-heading font-bold text-lg text-ocean">Gestão do Cardápio</h3>

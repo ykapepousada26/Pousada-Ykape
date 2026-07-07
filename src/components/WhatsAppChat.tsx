@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, X, Send, Compass, Coffee, Sparkles } from 'lucide-react';
+import { MessageCircle, X, Send, Compass, Coffee, Sparkles, MapPin, ExternalLink, Map } from 'lucide-react';
 
 interface WhatsAppChatProps {
   onOpenBooking: () => void;
   setActiveTab: (tab: string) => void;
   setIsAdminMode: (mode: boolean) => void;
+  cardapioUrl?: string;
 }
 
 export default function WhatsAppChat({
   onOpenBooking,
   setActiveTab,
-  setIsAdminMode
+  setIsAdminMode,
+  cardapioUrl
 }: WhatsAppChatProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<Array<{ sender: 'bot' | 'user'; text: string; time: string }>>([]);
   const [unreadCount, setUnreadCount] = useState(1);
@@ -55,13 +58,14 @@ export default function WhatsAppChat({
       if (lowercaseText.includes('reserva') || lowercaseText.includes('preço') || lowercaseText.includes('diaria') || lowercaseText.includes('quarto') || lowercaseText.includes('valor')) {
         replyText = 'Para agilizar sua reserva e garantir 50% de desconto no pagamento antecipado, você pode clicar no botão "Fazer Reserva Online" aqui no chat ou na barra superior do site! É super seguro e rápido. Quer que eu te guie no processo?';
       } else if (lowercaseText.includes('cardapio') || lowercaseText.includes('porção') || lowercaseText.includes('bebida') || lowercaseText.includes('comida')) {
-        replyText = 'Nossa cozinha serve porções fresquinhas frente ao mar (como camarão empanado e isca de peixe) e drinks tropicais! Você pode visualizar todo o nosso cardápio atualizado na aba "Cardápio" do site.';
+        replyText = 'Nossa cozinha serve porções fresquinhas frente ao mar (como camarão empanado e isca de peixe) e drinks tropicais! Você pode visualizar todo o nosso cardápio atualizado na aba "Cardápio" do site' + (cardapioUrl ? ` ou acessar diretamente o nosso cardápio digital completo clicando neste link: ${cardapioUrl}` : '.');
         setActiveTab('cardapio');
         setIsAdminMode(false);
         const el = document.getElementById('cardapio');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       } else if (lowercaseText.includes('onde') || lowercaseText.includes('localizacao') || lowercaseText.includes('endereco') || lowercaseText.includes('como chegar')) {
-        replyText = 'Estamos localizados na Avenida Beira Mar, nº 10.050, Balneário Yemar (divisa com Porto Velho), logo ao lado do Supermercado Monte Carlo. É só atravessar a rua e você já está na praia!';
+        replyText = 'Estamos localizados na Avenida Beira Mar, nº 10.050, Balneário Yemar (divisa com Porto Velho), logo ao lado do Supermercado Monte Carlo. Abri um modal com o mapa interativo na sua tela para você ver a nossa localização exata pé na areia!';
+        setIsMapOpen(true);
       }
 
       setChatHistory(prev => [
@@ -80,8 +84,15 @@ export default function WhatsAppChat({
       }, 1500);
     } else if (action === 'cardapio') {
       handleSendMessage('Quero ver o cardápio da pousada!');
+      setActiveTab('cardapio');
+      setIsAdminMode(false);
+      setTimeout(() => {
+        const el = document.getElementById('cardapio');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     } else if (action === 'localizacao') {
       handleSendMessage('Qual a localização exata e ponto de referência?');
+      setIsMapOpen(true);
     }
   };
 
@@ -171,7 +182,7 @@ export default function WhatsAppChat({
           {/* Quick reply buttons */}
           <div className="px-4 py-2 bg-stone-100/50 border-t border-gray-100 flex flex-wrap gap-1.5 justify-start">
             <a
-              href="https://wa.me/5513997654321?text=Olá!%20Gostaria%20de%20conversar%20sobre%20as%20acomodações%20da%20Pousada%20Ykape."
+              href="https://wa.me/5513996213162?text=Olá!%20Gostaria%20de%20conversar%20sobre%20as%20acomodações%20da%20Pousada%20Ykape."
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs bg-emerald-500 hover:bg-emerald-600 border border-emerald-600 text-white font-bold px-3 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1 shadow-sm hover:scale-105"
@@ -186,7 +197,7 @@ export default function WhatsAppChat({
             </button>
             <button
               onClick={() => handleQuickAction('cardapio')}
-              className="text-xs bg-white hover:bg-emerald-50 border border-emerald-500/20 text-emerald-700 font-semibold px-2.5 py-1.5 rounded-full transition-colors cursor-pointer flex items-center gap-1 shadow-sm"
+              className="text-xs bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 font-bold px-3 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1 shadow-sm hover:scale-105 active:scale-95"
             >
               🍟 Ver Cardápio
             </button>
@@ -217,6 +228,74 @@ export default function WhatsAppChat({
             >
               <Send className="w-4 h-4" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Location Map Modal */}
+      {isMapOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000] flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 max-w-lg w-full flex flex-col relative animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="bg-ocean text-white p-5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Map className="w-5 h-5 text-turquoise" />
+                <h3 className="font-heading font-extrabold text-base sm:text-lg">Localização da Pousada Ykapê</h3>
+              </div>
+              <button
+                onClick={() => setIsMapOpen(false)}
+                className="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-full transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 space-y-4">
+              <div className="space-y-2 text-xs sm:text-sm text-gray-700">
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-5 h-5 text-turquoise shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-gray-900">Endereço Completo</p>
+                    <p className="text-gray-600">Avenida Beira Mar, nº 10.050 • Balneário Yemar • Ilha Comprida - SP</p>
+                  </div>
+                </div>
+                
+                <div className="bg-amber-50/75 border border-amber-200 p-3 rounded-xl text-amber-800 text-xs leading-normal">
+                  <strong>📍 Ponto de Referência:</strong> Ao lado do Supermercado Monte Carlo (Yemar). Facilidade máxima de conveniência.
+                </div>
+              </div>
+
+              {/* Responsive Google Maps Iframe */}
+              <div className="h-64 sm:h-72 rounded-2xl overflow-hidden border border-gray-200 relative shadow-inner">
+                <iframe 
+                  title="Localização Pousada Ykape"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.330883658248!2d-47.82855172382025!3d-24.920803567709328!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94db29a397db8fdb%3A0xc6cb1c79c8d50454!2sIlha%20Comprida%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1719114321289!5m2!1spt-BR!2sbr" 
+                  className="w-full h-full border-none"
+                  allowFullScreen={false} 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-5 pb-5 pt-2 flex flex-col sm:flex-row gap-2 justify-end border-t border-gray-100 bg-gray-50/50">
+              <button
+                onClick={() => setIsMapOpen(false)}
+                className="px-4 py-2 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
+              >
+                Fechar
+              </button>
+              <a 
+                href="https://www.google.com/maps/dir/?api=1&destination=Pousada+Ykapê+Avenida+Beira+Mar+Balneário+Yemar+Ilha+Comprida"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-turquoise hover:bg-turquoise-dark text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 hover:scale-[1.02] cursor-pointer"
+              >
+                <ExternalLink className="w-4 h-4" /> Traçar Rota (Google Maps)
+              </a>
+            </div>
           </div>
         </div>
       )}

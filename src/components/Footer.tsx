@@ -124,23 +124,25 @@ export default function Footer({ setActiveTab, setIsAdminMode, onOpenBooking }: 
                 <p className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-turquoise" />
                   <a 
-                    href="https://wa.me/5513997654321?text=Olá,%20gostaria%20de%20informações%20sobre%20as%20reservas!" 
+                    id="footer-whatsapp-1"
+                    href="https://wa.me/5513996213162?text=Olá,%20gostaria%20de%20informações%20sobre%20as%20reservas!" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="hover:text-turquoise transition-colors"
                   >
-                    (13) 99765-4321 <span className="text-emerald-400 font-semibold text-xs ml-1">(WhatsApp 1)</span>
+                    (13) 99621-3162 <span className="text-emerald-400 font-semibold text-xs ml-1">(WhatsApp 1)</span>
                   </a>
                 </p>
                 <p className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-turquoise" />
                   <a 
-                    href="https://wa.me/5513999999999?text=Olá,%20gostaria%20de%20informações%20sobre%20as%20reservas!" 
+                    id="footer-whatsapp-2"
+                    href="https://wa.me/5511999992965?text=Olá,%20gostaria%20de%20informações%20sobre%20as%20reservas!" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="hover:text-turquoise transition-colors"
                   >
-                    (13) 99999-9999 <span className="text-emerald-400 font-semibold text-xs ml-1">(WhatsApp 2)</span>
+                    (11) 99999-2965 <span className="text-emerald-400 font-semibold text-xs ml-1">(WhatsApp 2)</span>
                   </a>
                 </p>
               </div>

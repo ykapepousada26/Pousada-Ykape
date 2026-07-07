@@ -20,13 +20,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1HEzaDt2ybkqugG9ItAi8p9LshGbv2Mfc',
-      'https://lh3.googleusercontent.com/d/1J-TBLZ0akTcYK-qw2jrlaAa3ud96MaOo',
-      'https://lh3.googleusercontent.com/d/1JVA1yyj72XBTfKe3Nm_ri9ikZ_HN1GyM'
+      'https://i.postimg.cc/tgkRcbM4/20240119-102749.jpg',
+      'https://i.postimg.cc/LX09HTSG/20240522-110617.avif',
+      'https://i.postimg.cc/bvpNLrL9/20240522-111035.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1UI7CqQF9kR5B2MLWjKVk8lOdssCftH1v'
+    driveFolder: ''
   },
   {
     id: 'quarto-02',
@@ -47,12 +47,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1i5Xso-ZfugHOYce28gq7HX-4Imos3Nja',
-      'https://lh3.googleusercontent.com/d/10jXKaAJbJzM1MPra9lWNV07b3Eqg0IWA'
+      'https://i.postimg.cc/kXynGq7D/20240127-120804.jpg',
+      'https://i.postimg.cc/x1T9bhdt/20240522-112049.avif',
+      'https://i.postimg.cc/kXynGq7D/20240127-120804.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '13r6-D6w8MHcCZu-JHiG32QUOmLDuje8O'
+    driveFolder: ''
   },
   {
     id: 'quarto-03',
@@ -73,12 +74,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/15XNxCdXyPzOyBylIwl55IVugpn_G0Guh',
-      'https://lh3.googleusercontent.com/d/1kI0VITgmEVOxHr_H4cXcveDrO4mW_bqh'
+      'https://i.postimg.cc/C5NWhMbf/20240127-121816.jpg',
+      'https://i.postimg.cc/J75wcxv2/20240522-112820.avif',
+      'https://i.postimg.cc/tRN0tkwK/20240522-113136.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1HCRXGni7TvSs5JPOZDmlqTaNWSSR5X-B'
+    driveFolder: ''
   },
   {
     id: 'quarto-04',
@@ -99,12 +101,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1q3awevY9IoJyMvk7WomXrJ0Rpi-8awE5',
-      'https://lh3.googleusercontent.com/d/1TGhJX2qjPD9gtyYz9B4fsBGkumHT1n8X'
+      'https://i.postimg.cc/sDLTpZf1/20240127-121348.jpg',
+      'https://i.postimg.cc/6QJzPJvN/20240522-113613.avif',
+      'https://i.postimg.cc/N0qbnqHv/20240522-113838.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1nwukiDNDLRQ6uT8QRTwR5pUGFET9zm8W'
+    driveFolder: ''
   },
   {
     id: 'quarto-05',
@@ -125,12 +128,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      '/src/assets/images/suite_master_vista_mar_1782829944355.jpg',
-      'https://lh3.googleusercontent.com/d/1F-j0srbjt5Zqeuzz5AXsafKQs_0TSxKk'
+      'https://i.postimg.cc/8cJ6Dc2F/20240127-121418.jpg',
+      'https://i.postimg.cc/4yDh3ZGL/20240522-114538.avif',
+      'https://i.postimg.cc/5yhFt1JP/20240522-114618.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1lhex1Ee5BR4-9FfK0M5HgMXdxaxRm7Sd'
+    driveFolder: ''
   },
   {
     id: 'quarto-06',
@@ -151,12 +155,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1nRY6G9ehEybJOSAZx7MjEoJ9JE49F-iP',
-      'https://lh3.googleusercontent.com/d/1ozFcwTYb6FckWpiDyseZ7pCumeWQ7OKC'
+      'https://i.postimg.cc/qBzDDdb7/20240127-121449.jpg',
+      'https://i.postimg.cc/kMz1khzb/20240522-115530.avif',
+      'https://i.postimg.cc/DfHjtYHm/20240522-115803.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '15WsYJ1fn376J0R17TnPU0Wot_Ooz9Gkl'
+    driveFolder: ''
   },
   {
     id: 'quarto-07',
@@ -177,12 +182,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1qmKwQBOEj1RDLitoQlTaizqxiDNgrzcs',
-      'https://lh3.googleusercontent.com/d/16radEASvoiNWQ-npSui4qUEh56q1SeNz'
+      'https://i.postimg.cc/GtyQLdV5/20240127-121529.jpg',
+      'https://i.postimg.cc/dQknmj3R/20240522-120422.avif',
+      'https://i.postimg.cc/nVjTYGr4/20240522-120842.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1PmxBSuZIAPiDs1yDa0BBNC9leFk-Yrlo'
+    driveFolder: ''
   },
   {
     id: 'quarto-08',
@@ -204,12 +210,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1XcLQp6LIaJANIt2nbPUbI9iFDPOwjIth',
-      'https://lh3.googleusercontent.com/d/1sxNSk8W7rfEzM-Lf7WfHonvKyqNjlqLz'
+      'https://i.postimg.cc/VvQtFMZM/20240127-121645.jpg',
+      'https://i.postimg.cc/PJWwVx0R/20240522-122117.avif',
+      'https://i.postimg.cc/T1VDNwB9/20240522-122450.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '154OkG0T0v7k_r83pgwJuRvV-RTTeZq0q'
+    driveFolder: ''
   },
   {
     id: 'quarto-09',
@@ -217,7 +224,7 @@ export const INITIAL_ROOMS: Room[] = [
     type: 'standard',
     capacity: 2,
     pricePerNight: 0,
-    description: 'Acomodação ampla ideal para casais que buscam espaço e conforto.',
+    description: 'Acomodação ampla ideal para casais que buscam espaço and conforto.',
     hasAirConditioning: false,
     amenities: [
       'Cama de Casal',
@@ -229,12 +236,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/16GnsVT2douRQzoyPXTLUFnpegKAoBAfO',
-      'https://lh3.googleusercontent.com/d/1x58SOJjvOW4vLaeZQiEvKmnn4SYxkI4S'
+      'https://i.postimg.cc/Ss0j046Z/20240127-121645.jpg',
+      'https://i.postimg.cc/PxmJT7KJ/20240522-122117.avif',
+      'https://i.postimg.cc/tThJpcD9/20240522-122450.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1jXon0aPYi3YrmM5TXgpywJ6oxR_9V7P7'
+    driveFolder: ''
   },
   {
     id: 'quarto-10',
@@ -256,12 +264,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1yseperIJN3JI9XgIzcf0c83MBOQa5gnG',
-      'https://lh3.googleusercontent.com/d/1e3atCtLx9A5UubmhnfqHeyMMEmU2PzeL'
+      'https://i.postimg.cc/Wb4NHtRg/20240127-121724.jpg',
+      'https://i.postimg.cc/BQwS9ssr/20240522-123024.avif',
+      'https://i.postimg.cc/02HkRxP1/20240522-123310.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1kPPKXUAZ2O39m2EssLcFrIw1aDXLF7eq'
+    driveFolder: ''
   },
   {
     id: 'quarto-11',
@@ -283,12 +292,12 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1ZjAW2tpheEbtmynXvosF_6DwA9dpjeTK',
-      'https://lh3.googleusercontent.com/d/176OXzP79dlWERjkPH5Mk1t7sZ585jO7N'
+      'https://i.postimg.cc/BZrr0yDp/20240522-125007.jpg',
+      'https://i.postimg.cc/qBPPTYn3/20240522-124646.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1Dnoc2GEYbCdChSvuNSeNYVa4gX8g48_0'
+    driveFolder: ''
   },
   {
     id: 'quarto-12',
@@ -308,12 +317,14 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      '/src/assets/images/suite_standard_familia_quarto_12_1782830051643.jpg',
-      'https://lh3.googleusercontent.com/d/1eao_E_6H-VjDYH8cTUCP6Qb6kzr-BvQV'
+      'https://i.postimg.cc/d0QcLxqR/20240520-132314.avif',
+      'https://i.postimg.cc/9fXHrnWZ/20240520-132342.avif',
+      'https://i.postimg.cc/1zR1fj96/20240520-132428.avif',
+      'https://i.postimg.cc/wBxY7G6X/20240520-132547.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1uF97voMiWyE6I3R2E0iY3sfbqUMyPR8l'
+    driveFolder: ''
   },
   {
     id: 'quarto-13',
@@ -334,12 +345,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1DOibvZ5D5_2TuD3B0ofGytlychvR8yXB',
-      'https://lh3.googleusercontent.com/d/1PjAw4vv8-C6RYBw5hc5ur1cPIg_yVNam'
+      'https://i.postimg.cc/HWyRsgQQ/20240605-123118.avif',
+      'https://i.postimg.cc/MHVFs7WL/20240522-124226.jpg',
+      'https://i.postimg.cc/rmvHCnL7/20240522-124412.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1PmE7FKHFqR1Ty2hdbvsJ9nFvsohCmVaG'
+    driveFolder: ''
   },
   {
     id: 'quarto-14',
@@ -360,12 +372,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1CPVLQj0H1cHwp9VJf4BPQjDmF6WxkzvQ',
-      'https://lh3.googleusercontent.com/d/1s7Dho9hIcb4J2q7TfWwJ75_jALonhdtr'
+      'https://i.postimg.cc/jSgZ4gHq/20240520-131324.avif',
+      'https://i.postimg.cc/pLGqJGfr/20240520-131354.avif',
+      'https://i.postimg.cc/6pjYfjrT/20240520-131832.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1qIeB2qYZsdCxXgacLMJAT_uGeznR8cuk'
+    driveFolder: ''
   },
   {
     id: 'quarto-15',
@@ -385,12 +398,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/191GQ5JZJPbmNqrihmkT3ToQIqrtkfKS7',
-      'https://lh3.googleusercontent.com/d/1pJsbi4pfPXjJ5GA0DxFSbX85xmD1-dgW'
+      'https://i.postimg.cc/zXMywTLf/20240517-100337.jpg',
+      'https://i.postimg.cc/wjm7w3J1/20240517-100404.jpg',
+      'https://i.postimg.cc/28J1dnqZ/20240517-100417.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1nVuVEaWHd4daTvsjA9YE4XaIgFFoyd1Z'
+    driveFolder: ''
   },
   {
     id: 'quarto-16',
@@ -411,12 +425,14 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1NlzdbqZvfCSP5JeGXs8kWa70zn5I0Bwz',
-      'https://lh3.googleusercontent.com/d/1rI1nhk1DSeVefCkx1Wkkh2lzMDtCf9oz'
+      'https://i.postimg.cc/Tw8jtZpj/20240517-095658.jpg',
+      'https://i.postimg.cc/tTh3w2x1/20240517-095615.jpg',
+      'https://i.postimg.cc/TwrVFCDp/20240517-095602.jpg',
+      'https://i.postimg.cc/50c5sZ6Y/Imagem-da-sacada.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1WIjbQcdZWRoeaDEck4D1_h5efY5cbjly'
+    driveFolder: ''
   },
   {
     id: 'quarto-17',
@@ -437,12 +453,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/10zhmxriaO7z6Wejdv-RzspzKZalXlMgy',
-      'https://lh3.googleusercontent.com/d/1H-AfI0cBU5zYymWmfzo7ANRyLVQsBatZ'
+      'https://i.postimg.cc/tTSqqHWC/20240127-122559.jpg',
+      'https://i.postimg.cc/Wzd2tfwm/20240520-122541.avif',
+      'https://i.postimg.cc/j2DsCk4v/20240520-122711.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1nCfb-zHyQ6i6wG-HrOIOPYq0ysp2Tyyo'
+    driveFolder: ''
   },
   {
     id: 'quarto-18',
@@ -464,12 +481,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1oSbKvQ3aVTLwmmA-SDjpoLiEX3N6W5ed',
-      'https://lh3.googleusercontent.com/d/1390mOyy57apHvT73TUV3WSHdy9VMr75e'
+      'https://i.postimg.cc/RhJBvJvD/20240517-101518.jpg',
+      'https://i.postimg.cc/Wzqvsqsf/20240517-101551.jpg',
+      'https://i.postimg.cc/mk1sT1Tp/20240517-101616.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1hDdIJK2qKxJb13kHHno8vM2Nf5FPRFX4'
+    driveFolder: ''
   },
   {
     id: 'quarto-19',
@@ -491,12 +509,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/19HpT47DCuHWQKynhnrw-LGNf4TG965wl',
-      'https://lh3.googleusercontent.com/d/1k3blfXy9DNW7qrvmAMUMYRTHDHf6IdFF'
+      'https://i.postimg.cc/CM8My9dV/20240520-130842.avif',
+      'https://i.postimg.cc/jqfqVBCb/20240520-130854.avif',
+      'https://i.postimg.cc/DfGfVR0M/20240520-130824.avif'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1YIVuF_pe8VuzTkfZGgQusALPufk_jLE4'
+    driveFolder: ''
   },
   {
     id: 'quarto-20',
@@ -517,12 +536,13 @@ export const INITIAL_ROOMS: Room[] = [
       'Café da manhã tropical incluso'
     ],
     images: [
-      'https://lh3.googleusercontent.com/d/1A3mrYJNVJm6EKKYEHFGkd9108Ccg7sfh',
-      'https://lh3.googleusercontent.com/d/1vfx7S5yg8QERZ5dwBdX_goVVa5CjIWXE'
+      'https://i.postimg.cc/C1HvkFJ3/20240517-101042.jpg',
+      'https://i.postimg.cc/bJH6kz3q/20240517-100731.jpg',
+      'https://i.postimg.cc/85ByM1tz/20240517-100812.jpg'
     ],
     status: 'available',
     totalUnits: 1,
-    driveFolder: '1WIjbQcdZWRoeaDEck4D1_h5efY5cbjly'
+    driveFolder: ''
   }
 ];
 
@@ -729,46 +749,26 @@ export const INITIAL_REVIEWS: Review[] = [
 ];
 
 export const INITIAL_GALLERY: GalleryItem[] = [
-  { id: 'g-1', album: 'externo', title: 'Vista da Pousada', imageUrl: 'https://lh3.googleusercontent.com/d/1lgeVFIkkt97NfidRZnNmkuGjE54SdJkx' },
-  { id: 'g-2', album: 'externo', title: 'Área Externa', imageUrl: 'https://lh3.googleusercontent.com/d/185Fc5Tawc9W_xjVfv4nZc--NlO9-1yTL' },
-  { id: 'g-3', album: 'piscinas', title: 'Nossas Piscinas', imageUrl: 'https://lh3.googleusercontent.com/d/1RI3eZAuEF0MX4nB_2tcqHVrG8OpgmQm2' },
-  { id: 'g-4', album: 'piscinas', title: 'Lazer e Diversão', imageUrl: 'https://lh3.googleusercontent.com/d/1Kgclj7jIdTDEUwAHTdS4-wmLx_DKz37p' },
-  { id: 'g-5', album: 'quartos', title: 'Acomodações Confortáveis', imageUrl: 'https://lh3.googleusercontent.com/d/14sXGBWdK9m79m46mQ8NAPTp1NklRxS6S' },
-  { id: 'g-6', album: 'quartos', title: 'Quartos Higienizados', imageUrl: 'https://lh3.googleusercontent.com/d/1K9ch80htYP4ZDoMRTFC6-_PuDgY0WH4f' },
-  { id: 'g-7', album: 'cafe', title: 'Café da Manhã Completo', imageUrl: 'https://lh3.googleusercontent.com/d/1-odHDzCNR3ReL8mh_cv52M9QFMSOvKrM' },
-  { id: 'g-8', album: 'praia', title: 'Beira Mar Ilha Comprida', imageUrl: 'https://lh3.googleusercontent.com/d/1QtjCqABkd1RP6JYmAvg5pzVygdo7bkNt' },
-  { id: 'g-9', album: 'externo', title: 'Ambiente Familiar', imageUrl: 'https://lh3.googleusercontent.com/d/1EgTsARE0Lp_Ho8K7r-IaHY_5_RpsnvSM' },
-  { id: 'g-10', album: 'piscinas', title: 'Deck das Piscinas', imageUrl: 'https://lh3.googleusercontent.com/d/1AzwrAhQwu8TTR2T2s2RaHPD3x0fya2mF' },
-  { id: 'g-11', album: 'quartos', title: 'Detalhes que Encantam', imageUrl: 'https://lh3.googleusercontent.com/d/18oVwXKcZlVYphCYhJswRCBKmD1Uua5ne' },
-  { id: 'g-12', album: 'externo', title: 'Lazer e Bem-estar', imageUrl: 'https://lh3.googleusercontent.com/d/1thTzdqGjVfqNFk7pu3_37jRv7nhsLuc9' },
-  { id: 'g-13', album: 'piscinas', title: 'Ambientes Integrados', imageUrl: 'https://lh3.googleusercontent.com/d/1b3bJorRDKt6MpoBN8zyFWC3Q6Zr4RuGE' },
-  { id: 'g-14', album: 'quartos', title: 'Conforto Yemar', imageUrl: 'https://lh3.googleusercontent.com/d/1AUdRx2K2wYWxwJZH9H9PB7PTTh2RI9VE' },
-  { id: 'g-15', album: 'externo', title: 'Vista Privilegiada', imageUrl: 'https://lh3.googleusercontent.com/d/1-_E0wgUR-AMAZ8kY9lE1j0EgUyG9SeJB' },
-  { id: 'g-16', album: 'externo', title: 'Entrada Acolhedora', imageUrl: 'https://lh3.googleusercontent.com/d/1OIRffKbj_qKNE7NHqxDYNtrxiV2SL-z7' },
-  { id: 'g-17', album: 'piscinas', title: 'Área de Lazer Completa', imageUrl: 'https://lh3.googleusercontent.com/d/1mlKIJmqw7S6XXZQjLHYAo1UnseapVYMT' },
-  { id: 'g-18', album: 'quartos', title: 'Suíte Planejada', imageUrl: 'https://lh3.googleusercontent.com/d/1NP58baTln-bjSUvQcp48sWz7rSMzs1yk' },
-  { id: 'g-19', album: 'cafe', title: 'Delícias Regionais', imageUrl: 'https://lh3.googleusercontent.com/d/1C1qoCeVNRQ49nahQJ-1Cnl5KU2yhegEy' },
-  { id: 'g-20', album: 'praia', title: 'Cenários de Ilha Comprida', imageUrl: 'https://lh3.googleusercontent.com/d/1rhfc_3CcdUPnozNWZzuCDqXfUs1bTXzM' },
-  { id: 'g-21', album: 'externo', title: 'Jardins e Varandas', imageUrl: 'https://lh3.googleusercontent.com/d/1wAJiPgKInE2wvWjEmvVZC35ZICeeVm4Y' },
-  { id: 'g-22', album: 'piscinas', title: 'Banho de Sol e Descanso', imageUrl: 'https://lh3.googleusercontent.com/d/1AEhoRVD14EYj79sGCyKHr8KzrVnqlgyE' },
-  { id: 'g-23', album: 'quartos', title: 'Acomodação Ampla', imageUrl: 'https://lh3.googleusercontent.com/d/1n64djOB5xtWAMsVdIMrV9PpVbcLsqnu3' },
-  { id: 'g-24', album: 'cafe', title: 'Frutas Frescas', imageUrl: 'https://lh3.googleusercontent.com/d/1WcBu-RUbsaGV_dH-w34X2hFqcQ680ZMp' },
-  { id: 'g-25', album: 'praia', title: 'Pôr do Sol na Praia', imageUrl: 'https://lh3.googleusercontent.com/d/1OEbbk44PXD39mS9LiF5foJTDU2neU1iz' },
-  { id: 'g-26', album: 'externo', title: 'Fachada Noturna', imageUrl: 'https://lh3.googleusercontent.com/d/1AcvKOjGrzomKFMCKy0uNB3XxpCyTyI4J' },
-  { id: 'g-27', album: 'piscinas', title: 'Piscina e Deck', imageUrl: 'https://lh3.googleusercontent.com/d/1YIL-zcGXkSLS_r6S-m_LARgIkpkgA7NA' },
-  { id: 'g-28', album: 'quartos', title: 'Conforto Garantido', imageUrl: 'https://lh3.googleusercontent.com/d/1oF-ble3YPvu-vYFt-1zT24cwjcacWITQ' },
-  { id: 'g-29', album: 'cafe', title: 'Variedade no Café', imageUrl: 'https://lh3.googleusercontent.com/d/1XhqYxeaG2av1TuSSk5tFi58e6p6WODsa' },
-  { id: 'g-30', album: 'praia', title: 'Dunas de Ilha Comprida', imageUrl: 'https://lh3.googleusercontent.com/d/189DVjYAVM5JrSloQmfnIGDH5i4_fBoap' },
-  { id: 'g-31', album: 'externo', title: 'Cantinho do Sossego', imageUrl: 'https://lh3.googleusercontent.com/d/1aoyu3aN43dFVICvpXFTYNbrW5Jl9A59q' },
-  { id: 'g-32', album: 'piscinas', title: 'Momento Relax', imageUrl: 'https://lh3.googleusercontent.com/d/1eol-jyuHpaX3veF4sIYAhuBc5WoIS6W8' },
-  { id: 'g-33', album: 'externo', title: 'Beleza Natural', imageUrl: 'https://lh3.googleusercontent.com/d/1Qk0dKXP-5yrAYItlz5loaPNWAkJB-eUv' },
-  { id: 'g-34', album: 'piscinas', title: 'Refresco Tropical', imageUrl: 'https://lh3.googleusercontent.com/d/17JqtvUwR9ThXv2GWzm5OiYOaJ_yPJLmL' },
-  { id: 'g-35', album: 'quartos', title: 'Hospedagem de Qualidade', imageUrl: 'https://lh3.googleusercontent.com/d/1eRWKdlILqE0nYgCA7e6ls57Fio_HRPgs' },
-  { id: 'g-36', album: 'externo', title: 'Pátio Sombreado', imageUrl: 'https://lh3.googleusercontent.com/d/1LLtRGaiRCB71aB83s4Fybzw4DS1WjnDo' },
-  { id: 'g-37', album: 'piscinas', title: 'Área de Lazer Integrada', imageUrl: 'https://lh3.googleusercontent.com/d/1UJoGzVWyyksVGV3tW-oz_DV_PwJK7rDx' },
-  { id: 'g-38', album: 'quartos', title: 'Ambiente Acolhedor', imageUrl: 'https://lh3.googleusercontent.com/d/1eLl-q3XEzO2UE79z4-1VDLwqdMNFXDVz' },
-  { id: 'g-39', album: 'externo', title: 'Arquitetura Local', imageUrl: 'https://lh3.googleusercontent.com/d/1n2TTRYLe5j9_3p8qohjhpGfAXxHsMHT6' },
-  { id: 'g-40', album: 'piscinas', title: 'Diversão em Família', imageUrl: 'https://lh3.googleusercontent.com/d/1OuklHeLNzqQgctiueen7PPErwmO4b4R2' },
+  { id: 'g-1', album: 'externo', title: 'Vista da Pousada', imageUrl: 'https://i.postimg.cc/Gt5687gS/image.jpg' },
+  { id: 'g-2', album: 'piscinas', title: 'Piscina da Frente', imageUrl: 'https://i.postimg.cc/yxb2gQpQ/pscina-frente.jpg' },
+  { id: 'g-3', album: 'piscinas', title: 'Piscina dos Fundos', imageUrl: 'https://i.postimg.cc/k5mzbtwS/Piscina-fundos.jpg' },
+  { id: 'g-4', album: 'externo', title: 'Área de Estar Externa', imageUrl: 'https://i.postimg.cc/gcxpd87b/20240522-123724.avif' },
+  { id: 'g-5', album: 'piscinas', title: 'Deck e Espreguiçadeiras', imageUrl: 'https://i.postimg.cc/sDSRGyyN/20240522-123559-2.jpg' },
+  { id: 'g-6', album: 'externo', title: 'Paisagismo e Jardins', imageUrl: 'https://i.postimg.cc/Qx5rKssw/20240522-123813.jpg' },
+  { id: 'g-7', album: 'externo', title: 'Caminho para a Praia', imageUrl: 'https://i.postimg.cc/8PLqPHmD/20240522-123944.avif' },
+  { id: 'g-8', album: 'quartos', title: 'Suíte Master Premium', imageUrl: 'https://i.postimg.cc/qBPPTYn3/20240522-124646.jpg' },
+  { id: 'g-9', album: 'quartos', title: 'Conforto e Decoração', imageUrl: 'https://i.postimg.cc/tRKKjfPV/20240522-124701.jpg' },
+  { id: 'g-10', album: 'quartos', title: 'Detalhes da Acomodação', imageUrl: 'https://i.postimg.cc/WpBBvKrF/20240522-124721.jpg' },
+  { id: 'g-11', album: 'quartos', title: 'Suíte Ampla Casal', imageUrl: 'https://i.postimg.cc/wxCCpPJk/20240522-124806.jpg' },
+  { id: 'g-12', album: 'quartos', title: 'Acomodação Familiar', imageUrl: 'https://i.postimg.cc/BZrr0yDp/20240522-125007.jpg' },
+  { id: 'g-13', album: 'quartos', title: 'Ambiente Higienizado', imageUrl: 'https://i.postimg.cc/wMLbMqJB/20240522-125120.jpg' },
+  { id: 'g-14', album: 'cafe', title: 'Café da Manhã Completo', imageUrl: 'https://i.postimg.cc/DfXNBgDK/20240522-125234.avif' },
+  { id: 'g-15', album: 'cafe', title: 'Variedade de Bolos e Pães', imageUrl: 'https://i.postimg.cc/QC1nC85t/20240522-125452.jpg' },
+  { id: 'g-16', album: 'cafe', title: 'Bebidas e Sucos Naturais', imageUrl: 'https://i.postimg.cc/wMLbMqJm/20240522-125822.jpg' },
+  { id: 'g-17', album: 'cafe', title: 'Frutas Frescas da Estação', imageUrl: 'https://i.postimg.cc/v8VK3zj8/20240522-130051.jpg' },
+  { id: 'g-18', album: 'externo', title: 'Nossa Recepção', imageUrl: 'https://i.postimg.cc/SQMPDr5c/Recepcao.jpg' },
+  { id: 'g-19', album: 'praia', title: 'Dunas de Ilha Comprida', imageUrl: 'https://i.postimg.cc/Qxq0ynqs/Dunas-Juruvauva-2.avif' },
+  { id: 'g-20', album: 'praia', title: 'Guará Vermelho', imageUrl: 'https://i.postimg.cc/fTs85hm2/Guara-Vermelho-Ilha-2.jpg' },
 ];
 
 export const INITIAL_COUPONS: Coupon[] = [

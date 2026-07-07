@@ -186,7 +186,7 @@ export default function BookingFlow({
 
       // Generate text and redirect to WhatsApp
       const messageText = `Olá, Pousada Ykape! Gostaria de solicitar uma reserva sob consulta:\n\n*Código da Solicitação:* ${reservationCode}\n*Acomodação:* ${selectedRoom!.name}\n*Check-in:* ${search.checkIn}\n*Check-out:* ${search.checkOut}\n*Noites:* ${nights}\n*Hóspedes:* ${search.guests} ${search.guests === 1 ? 'pessoa' : 'pessoas'}\n\n*Dados do Hóspede:*\n*Nome:* ${guest.fullName}\n*CPF:* ${guest.cpf}\n*WhatsApp:* ${guest.phone}\n*E-mail:* ${guest.email}\n*Cidade/Estado:* ${guest.city} - ${guest.state}`;
-      const whatsappUrl = `https://wa.me/5513997654321?text=${encodeURIComponent(messageText)}`;
+      const whatsappUrl = `https://wa.me/5513996213162?text=${encodeURIComponent(messageText)}`;
       window.open(whatsappUrl, '_blank');
     }, 1500);
   };
@@ -791,7 +791,7 @@ export default function BookingFlow({
 
               <div className="pt-2 flex flex-col sm:flex-row justify-center items-center gap-3">
                 <a
-                  href={`https://wa.me/5513997654321?text=${encodeURIComponent(
+                  href={`https://wa.me/5513996213162?text=${encodeURIComponent(
                     `Olá, Pousada Ykape! Gostaria de solicitar uma reserva sob consulta:\n\n` +
                     `*Código da Solicitação:* ${createdReservation.code}\n` +
                     `*Acomodação:* ${createdReservation.roomName}\n` +

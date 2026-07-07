@@ -90,6 +90,7 @@ export default function App() {
   const [reservations, _setReservations] = useState<Reservation[]>(INITIAL_RESERVATIONS);
 
   const [reviews, _setReviews] = useState<Review[]>(INITIAL_REVIEWS);
+  const [cardapioUrl, setCardapioUrl] = useState('https://wa.me/c/5513996213162');
 
   // Refs to track last successfully synced state
   const lastSyncedRoomsRef = useRef<Room[]>([]);
@@ -219,12 +220,13 @@ export default function App() {
 
     async function loadFirebaseData() {
       try {
-        const [loadedRooms, loadedMenu, loadedGallery, loadedReservations, loadedReviews] = await Promise.all([
+        const [loadedRooms, loadedMenu, loadedGallery, loadedReservations, loadedReviews, loadedSettings] = await Promise.all([
           getCollectionData<Room>('rooms', INITIAL_ROOMS),
           getCollectionData<MenuItem>('menuItems', INITIAL_MENU),
           getCollectionData<GalleryItem>('gallery', INITIAL_GALLERY),
           getCollectionData<Reservation>('reservations', INITIAL_RESERVATIONS),
-          getCollectionData<Review>('reviews', INITIAL_REVIEWS)
+          getCollectionData<Review>('reviews', INITIAL_REVIEWS),
+          getCollectionData<any>('settings', [{ id: 'config', cardapioUrl: 'https://wa.me/c/5513996213162' }])
         ]);
 
         let finalRooms = loadedRooms;
@@ -252,12 +254,63 @@ export default function App() {
           console.error('Failed to load real room images:', apiErr);
         }
 
+        // Migrate all rooms with outdated images to the clean INITIAL_ROOMS configs
+        finalRooms = finalRooms.map(r => {
+          const rInitial = INITIAL_ROOMS.find(init => init.id === r.id);
+          const hasGoogleDriveLinks = r.images && r.images.some(img => img.includes('googleusercontent.com'));
+          const isOutdated = rInitial && (
+            (r.id === 'quarto-01' && (!r.images || !r.images.some(img => img.includes('tgkRcbM4')))) ||
+            (r.id === 'quarto-02' && (!r.images || !r.images.some(img => img.includes('kXynGq7D')))) ||
+            (r.id === 'quarto-03' && (!r.images || !r.images.some(img => img.includes('C5NWhMbf')))) ||
+            (r.id === 'quarto-04' && (!r.images || !r.images.some(img => img.includes('sDLTpZf1')))) ||
+            (r.id === 'quarto-05' && (!r.images || !r.images.some(img => img.includes('8cJ6Dc2F')))) ||
+            (r.id === 'quarto-06' && (!r.images || !r.images.some(img => img.includes('qBzDDdb7')))) ||
+            (r.id === 'quarto-07' && (!r.images || !r.images.some(img => img.includes('GtyQLdV5')))) ||
+            (r.id === 'quarto-08' && (!r.images || !r.images.some(img => img.includes('VvQtFMZM')))) ||
+            (r.id === 'quarto-09' && (!r.images || !r.images.some(img => img.includes('Ss0j046Z')))) ||
+            (r.id === 'quarto-10' && (!r.images || !r.images.some(img => img.includes('Wb4NHtRg')))) ||
+            (r.id === 'quarto-12' && (!r.images || !r.images.some(img => img.includes('d0QcLxqR')))) ||
+            (r.id === 'quarto-13' && (!r.images || !r.images.some(img => img.includes('HWyRsgQQ')))) ||
+            (r.id === 'quarto-14' && (!r.images || !r.images.some(img => img.includes('jSgZ4gHq')))) ||
+            (r.id === 'quarto-15' && (!r.images || !r.images.some(img => img.includes('zXMywTLf')))) ||
+            (r.id === 'quarto-16' && (!r.images || !r.images.some(img => img.includes('Tw8jtZpj')))) ||
+            (r.id === 'quarto-17' && (!r.images || !r.images.some(img => img.includes('tTSqqHWC')))) ||
+            (r.id === 'quarto-18' && (!r.images || !r.images.some(img => img.includes('RhJBvJvD')))) ||
+            (r.id === 'quarto-19' && (!r.images || !r.images.some(img => img.includes('CM8My9dV')))) ||
+            (r.id === 'quarto-20' && (!r.images || !r.images.some(img => img.includes('C1HvkFJ3'))))
+          );
+          
+          if ((hasGoogleDriveLinks || isOutdated) && rInitial) {
+            console.log(`[Room Image Migration] Migrating ${r.id} to new images...`);
+            const updated = { ...r, images: rInitial.images, driveFolder: '' };
+            saveDocument('rooms', r.id, updated).catch(err => console.error(`Error saving migration for ${r.id}:`, err));
+            return updated;
+          }
+          return r;
+        });
+
+        let finalGallery = loadedGallery;
+        const hasOldLinks = loadedGallery.some(item => item.imageUrl.includes('googleusercontent.com'));
+        if (hasOldLinks || loadedGallery.length !== INITIAL_GALLERY.length) {
+          console.log('[Gallery Migration] Detected old or mismatched gallery items. Updating Firestore with new images.');
+          try {
+            await syncCollectionToFirestore('gallery', loadedGallery, INITIAL_GALLERY);
+            finalGallery = INITIAL_GALLERY;
+          } catch (syncErr) {
+            console.error('Failed to sync migrated gallery:', syncErr);
+            finalGallery = INITIAL_GALLERY;
+          }
+        }
+
         if (active) {
           _setRooms(finalRooms);
           _setMenuItems(loadedMenu);
-          _setGallery(loadedGallery);
+          _setGallery(finalGallery);
           _setReservations(loadedReservations);
           _setReviews(loadedReviews);
+          if (loadedSettings && loadedSettings.length > 0) {
+            setCardapioUrl(loadedSettings[0].cardapioUrl);
+          }
         }
       } catch (error) {
         console.error('Error connecting to Firebase:', error);
@@ -449,7 +502,7 @@ export default function App() {
       `${checkInInfo}` +
       `${checkOutInfo}\n\n` +
       `*Mensagem:* ${contactForm.message}`;
-    const url = `https://wa.me/5513997654321?text=${encodeURIComponent(messageText)}`;
+    const url = `https://wa.me/5513996213162?text=${encodeURIComponent(messageText)}`;
     
     setContactWhatsappUrl(url);
     setContactSubmitted(true);
@@ -528,6 +581,8 @@ export default function App() {
             reservations={reservations}
             setReservations={_setReservations}
             onClose={() => setIsAdminMode(false)}
+            cardapioUrl={cardapioUrl}
+            setCardapioUrl={setCardapioUrl}
           />
           {isSyncing && (
             <div className="fixed bottom-4 right-4 bg-emerald-600 text-white px-4 py-2 rounded-full shadow-lg z-[100] flex items-center gap-2 text-sm font-medium animate-pulse">
@@ -1156,6 +1211,20 @@ export default function App() {
 
               </div>
 
+              {/* Button to open Digital Cardápio */}
+              {cardapioUrl && (
+                <div className="flex justify-center pt-6">
+                  <a
+                    href={cardapioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-turquoise hover:bg-turquoise-dark text-white font-bold text-xs sm:text-sm rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] uppercase tracking-wider cursor-pointer"
+                  >
+                    📖 Acessar Cardápio Digital Completo (PDF / WhatsApp)
+                  </a>
+                </div>
+              )}
+
             </div>
           </section>
 
@@ -1395,7 +1464,7 @@ export default function App() {
                       <h4 className="font-heading font-bold text-base">Mensagem Direcionada ao WhatsApp!</h4>
                       <p className="text-xs text-gray-600 leading-relaxed">Você está sendo redirecionado para o nosso WhatsApp para atendimento imediato. Caso a janela de conversa não abra automaticamente, por favor clique no botão abaixo:</p>
                       <a 
-                        href={contactWhatsappUrl || `https://wa.me/5513997654321`}
+                        href={contactWhatsappUrl || `https://wa.me/5513996213162`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-md transition-all uppercase tracking-wider cursor-pointer"
@@ -1625,6 +1694,7 @@ export default function App() {
         }}
         setActiveTab={setActiveTab}
         setIsAdminMode={setIsAdminMode}
+        cardapioUrl={cardapioUrl}
       />
 
     </div>
