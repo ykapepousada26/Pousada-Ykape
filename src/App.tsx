@@ -688,6 +688,8 @@ export default function App() {
                       <option value={2}>2 Hóspedes</option>
                       <option value={3}>3 Hóspedes</option>
                       <option value={4}>4 Hóspedes</option>
+                      <option value={5}>5 Hóspedes</option>
+                      <option value={6}>6 Hóspedes</option>
                     </select>
                   </div>
 

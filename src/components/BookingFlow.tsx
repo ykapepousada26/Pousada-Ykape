@@ -334,12 +334,12 @@ export default function BookingFlow({
                       onChange={(e) => setSearch({ ...search, guests: Number(e.target.value) })}
                       className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-turquoise/40"
                     >
-                      {[1, 2, 3, 4].map(num => (
+                      {[1, 2, 3, 4, 5, 6].map(num => (
                         <option key={num} value={num}>{num} {num === 1 ? 'Hóspede' : 'Hóspedes'}</option>
                       ))}
                     </select>
                   </div>
-                  <span className="text-[10px] text-gray-400 mt-1 block">Acomodações comportam até 4 pessoas. Para grupos maiores, faça mais reservas.</span>
+                  <span className="text-[10px] text-gray-400 mt-1 block">Acomodações comportam até 6 pessoas. Para grupos maiores, faça mais reservas.</span>
                 </div>
               </div>
 

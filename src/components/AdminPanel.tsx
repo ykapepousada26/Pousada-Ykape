@@ -112,6 +112,7 @@ export default function AdminPanel({
 
   // Adding Gallery Item State
   const [isAddingGallery, setIsAddingGallery] = useState(false);
+  const [editingGalleryItem, setEditingGalleryItem] = useState<GalleryItem | null>(null);
   const [galleryForm, setGalleryForm] = useState<{ album: GalleryItem['album']; title: string; imageUrl: string }>({
     album: 'quartos',
     title: '',
@@ -590,25 +591,49 @@ export default function AdminPanel({
   };
 
   // ----- HANDLERS FOR GALLERY -----
+  const handleEditGalleryClick = (item: GalleryItem) => {
+    setEditingGalleryItem(item);
+    setGalleryForm({
+      album: item.album,
+      title: item.title,
+      imageUrl: item.imageUrl
+    });
+    setIsAddingGallery(false);
+  };
+
   const handleSaveGallery = (e: React.FormEvent) => {
     e.preventDefault();
     if (!galleryForm.imageUrl) return;
 
-    const newItem: GalleryItem = {
-      id: 'g-' + Math.random().toString(36).substr(2, 9),
-      album: galleryForm.album,
-      title: galleryForm.title || 'Foto da Pousada',
-      imageUrl: galleryForm.imageUrl
-    };
-
-    setGallery(prev => [...prev, newItem]);
-    setIsAddingGallery(false);
+    if (editingGalleryItem) {
+      const updatedItem: GalleryItem = {
+        id: editingGalleryItem.id,
+        album: galleryForm.album,
+        title: galleryForm.title || 'Foto da Pousada',
+        imageUrl: galleryForm.imageUrl
+      };
+      setGallery(prev => prev.map(g => g.id === editingGalleryItem.id ? updatedItem : g));
+      setEditingGalleryItem(null);
+    } else {
+      const newItem: GalleryItem = {
+        id: 'g-' + Math.random().toString(36).substr(2, 9),
+        album: galleryForm.album,
+        title: galleryForm.title || 'Foto da Pousada',
+        imageUrl: galleryForm.imageUrl
+      };
+      setGallery(prev => [...prev, newItem]);
+      setIsAddingGallery(false);
+    }
     setGalleryForm({ album: 'quartos', title: '', imageUrl: '' });
   };
 
   const handleDeleteGallery = (id: string) => {
     if (confirm('Deseja realmente remover esta imagem da galeria?')) {
       setGallery(prev => prev.filter(g => g.id !== id));
+      if (editingGalleryItem?.id === id) {
+        setEditingGalleryItem(null);
+        setGalleryForm({ album: 'quartos', title: '', imageUrl: '' });
+      }
     }
   };
 
@@ -1662,10 +1687,12 @@ export default function AdminPanel({
                   </button>
                 </div>
 
-                {/* ADD FORM GALLERY */}
-                {isAddingGallery && (
+                {/* ADD/EDIT FORM GALLERY */}
+                {(isAddingGallery || editingGalleryItem) && (
                   <form onSubmit={handleSaveGallery} className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4 text-left">
-                    <h4 className="font-heading font-bold text-sm text-ocean">Adicionar Foto à Galeria</h4>
+                    <h4 className="font-heading font-bold text-sm text-ocean">
+                      {editingGalleryItem ? 'Editar Foto da Galeria' : 'Adicionar Foto à Galeria'}
+                    </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                       <div>
                         <label className="block text-gray-500 mb-1">Título da Imagem (Exibido no hover)</label>
@@ -1687,8 +1714,10 @@ export default function AdminPanel({
                       </div>
                     </div>
                     <div className="flex justify-end gap-2 pt-2 border-t border-gray-200 text-xs">
-                      <button type="button" onClick={() => setIsAddingGallery(false)} className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-gray-600">Cancelar</button>
-                      <button type="submit" className="bg-turquoise text-white px-4 py-2 rounded font-bold">Adicionar Foto</button>
+                      <button type="button" onClick={() => { setIsAddingGallery(false); setEditingGalleryItem(null); setGalleryForm({ album: 'quartos', title: '', imageUrl: '' }); }} className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-gray-600">Cancelar</button>
+                      <button type="submit" className="bg-turquoise text-white px-4 py-2 rounded font-bold">
+                        {editingGalleryItem ? 'Salvar Alterações' : 'Adicionar Foto'}
+                      </button>
                     </div>
                   </form>
                 )}
@@ -1704,14 +1733,33 @@ export default function AdminPanel({
                         {item.album}
                       </div>
 
-                      {/* Remove absolute hover button */}
-                      <button
-                        onClick={() => handleDeleteGallery(item.id)}
-                        className="absolute bottom-2 right-2 bg-rose-500 hover:bg-rose-600 text-white p-1.5 rounded-full shadow-md transition-all cursor-pointer"
-                        title="Remover imagem"
-                      >
-                        <Trash className="w-3.5 h-3.5" />
-                      </button>
+                      {/* Info overlay on hover */}
+                      <div className="absolute inset-x-0 bottom-0 bg-black/75 backdrop-blur-xs p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-200">
+                        <span className="text-[10px] text-white font-semibold truncate block" title={item.title}>
+                          {item.title || 'Foto da Pousada'}
+                        </span>
+                        <span className="text-[9px] text-turquoise block capitalize">
+                          Álbum: {item.album}
+                        </span>
+                      </div>
+
+                      {/* Action buttons (Edit & Delete) */}
+                      <div className="absolute bottom-2 right-2 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                        <button
+                          onClick={() => handleEditGalleryClick(item)}
+                          className="bg-turquoise hover:bg-turquoise-dark text-white p-1.5 rounded-full shadow-md transition-all cursor-pointer"
+                          title="Editar título e álbum"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteGallery(item.id)}
+                          className="bg-rose-500 hover:bg-rose-600 text-white p-1.5 rounded-full shadow-md transition-all cursor-pointer"
+                          title="Remover imagem"
+                        >
+                          <Trash className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
